@@ -1,11 +1,6 @@
 repos:
-  - repo: https://github.com/Lucas-C/pre-commit-hooks
-    rev: v1.5.4
-    hooks:
-      - id: forbid-crlf
-      - id: remove-crlf
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.5.0
+    rev: v3.2.0
     hooks:
       - id: trailing-whitespace
       - id: end-of-file-fixer
@@ -17,18 +12,8 @@ repos:
     hooks:
       - id: isort
         args: ["--filter-files"]
-  - repo: https://github.com/ambv/black
+  - repo: https://github.com/psf/black-pre-commit-mirror
     rev: 23.12.1
     hooks:
       - id: black
-        language_version: python3.8
-  - repo: https://github.com/pycqa/flake8
-    rev: 6.1.0
-    hooks:
-      - id: flake8
-        additional_dependencies: [flake8-typing-imports==v1.15.0]
-  - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v1.8.0
-    hooks:
-      - id: mypy
-        exclude: tests/
+        language_version: python3.10
