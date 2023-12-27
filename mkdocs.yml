@@ -50,11 +50,6 @@ plugins:
   - include-markdown
   - search:
       lang: en
-  - mkdocstrings:
-      handlers:
-        python:
-          options:
-            show_source: false
 
 extra:
   social:
