@@ -25,7 +25,7 @@ theme:
 markdown_extensions:
   - pymdownx.emoji:
       emoji_index: !!python/name:material.extensions.emoji.twemoji
-      emoji_generator: !!python/name:materialx.emoji.to_svg
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
   - pymdownx.critic
   - pymdownx.caret
   - pymdownx.mark
@@ -51,8 +51,6 @@ plugins:
   - search:
       lang: en
   - mkdocstrings:
-      enabled: !ENV [ENABLE_MKDOCSTRINGS, true]
-      default_handler: python
       handlers:
         python:
           options:
