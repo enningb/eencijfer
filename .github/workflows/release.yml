@@ -67,7 +67,7 @@ jobs:
         run: >-
           ls -l
 
-      - name: create github release
+      - name: Create github release
         id: create_release
         uses: actions/create-release@v1
         env:
