@@ -38,7 +38,7 @@ jobs:
           pip install poetry tox tox-gh-actions
 
       - name: test with tox
-        run: tox
+        run: poetry run tox
 
       - name: list files
         run: ls -l .
