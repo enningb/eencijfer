@@ -40,8 +40,8 @@ jobs:
           poetry version --short
           poetry build
 
-      - name: Publish package to TestPyPI
-        uses: pypa/gh-action-pypi-publish@release/v1
+      - name: Publish distribution to Test PyPI
+        uses: pypa/gh-action-pypi-publish@master
         with:
           password: ${{ secrets.TEST_PYPI_API_TOKEN }}
-          repository-url: https://github.com/enningb/eencijfer
+          repository_url: https://test.pypi.org/legacy/
