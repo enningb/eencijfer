@@ -23,9 +23,9 @@ packages = [
 
 [tool.poetry.dependencies]
 python = ">=3.9.0,<4.0"
-typer = "^0.9.0"
-pandas = "^2.0.0"
-numpy = "^1.26.2"
+typer =">=0.9.0"
+pandas =">=2.0.0"
+numpy = ">=1.26.2"
 black  = { version = "^23.12.1", optional = true}
 isort  = { version = "^5.13.2", optional = true}
 flake8  = { version = "^6.1.0", optional = true}
