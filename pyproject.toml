@@ -1,7 +1,7 @@
 [tool]
 [tool.poetry]
 name = "eencijfer"
-version = "0.2.12"
+version = "0.2.13"
 homepage = "https://github.com/enningb/eencijfer"
 description = "ETL-tool for Dutch eencijfer."
 authors = ["Bram Enning <bramenning@gmail.com>"]
@@ -83,7 +83,7 @@ skip_gitignore = true
 #skip_glob = docs/conf.py
 
 [tool.bumpversion]
-current_version = "0.2.12"
+current_version = "0.2.13"
 commit = true
 commit_args = "--no-verify"
 tag = true
