@@ -12,3 +12,6 @@
 
 ## 0.2.11 (2023-12-29)
  - less dependencies for package
+
+## 0.2.12 (2023-12-29)
+ - changed the way dependencies are added.
