@@ -25,12 +25,6 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      - name: Get version from tag
-        id: tag_name
-        run: |
-          run: echo "current_version=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
-        shell: bash
-
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v4
 
@@ -39,7 +33,7 @@ jobs:
         uses: mindsers/changelog-reader-action@v2
         with:
           path: ./CHANGELOG.md
-          version: $current_version
+          version: ${{ github.ref_name }}
 
       - uses: actions/setup-python@v5
         with:
