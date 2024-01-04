@@ -49,7 +49,7 @@ jobs:
           poetry run mkdocs build
 
       - name: publish documentation
-        run: poetry run mkdocs gh-deploy
+        run: poetry run mkdocs gh-deploy --force
 
       - name: Build wheels and source tarball
         run: >-
