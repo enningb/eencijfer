@@ -47,6 +47,18 @@ jobs:
           poetry version --short
           poetry build
 
+      - name: Package and upload artifacts
+        uses: ./.github/actions/package-and-upload-artifacts
+        with:
+          tag-name: ${{ env.TAG_NAME }}
+
+      - name: Create a GitHub release
+        uses: ./.github/actions/release
+        with:
+          tag-name: ${{ env.TAG_NAME }}
+          github-token: ${{ secrets.PERSONAL_TOKEN }}
+          pypi-api-token: ${{ secrets.PYPI_API_TOKEN }}
+
       - name: Publish distribution to Test PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
