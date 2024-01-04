@@ -23,6 +23,8 @@ jobs:
       url: https://pypi.org/p/eencijfer
     permissions:
       id-token: write # IMPORTANT: this permission is mandatory for trusted publishing
+      contents: write # for publishing to GH-pages
+      pages: write # for publishing to GH-pages
     strategy:
       matrix:
         python-versions: ["3.10"]
