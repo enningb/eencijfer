@@ -60,21 +60,6 @@ jobs:
         run: >-
           ls -l
 
-      - name: Create github release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
-          body: |
-            Changes in this Release
-            - First Change
-            - Second Change
-          draft: false
-          prerelease: false
-
       - name: Publish package to TestPyPI
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
