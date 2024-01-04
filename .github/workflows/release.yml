@@ -18,7 +18,11 @@ jobs:
   release:
     name: Create Release
     runs-on: ubuntu-22.04
-
+    environment:
+      name: pypi
+      url: https://pypi.org/p/eencijfer
+    permissions:
+      id-token: write # IMPORTANT: this permission is mandatory for trusted publishing
     strategy:
       matrix:
         python-versions: ["3.10"]
@@ -27,13 +31,6 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v4
-
-      - name: Get Changelog Entry
-        id: changelog_reader
-        uses: mindsers/changelog-reader-action@v2
-        with:
-          path: ./CHANGELOG.md
-          version: ${{ github.ref_name }}
 
       - uses: actions/setup-python@v5
         with:
@@ -60,8 +57,5 @@ jobs:
         run: >-
           ls -l
 
-      - name: Publish package to TestPyPI
+      - name: Publish package distributions to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
-        with:
-          password: ${{ secrets.TEST_PYPI_API_TOKEN }}
-          repository-url: https://github.com/enningb/eencijfer
