@@ -1,0 +1,4 @@
+Label,StartingPosition,NumberOfPositions,Converter
+VooropleidingOorspronkelijkeCode,1,5,convert_to_object
+Onderwijssector,6,3,convert_to_object
+OmschrijvingVooropleidingOorspronkelijkeCode,9,180,convert_to_object

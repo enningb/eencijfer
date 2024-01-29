@@ -1,0 +1,10 @@
+Label,StartingPosition,NumberOfPositions,Converter
+Brinnummer,1,4,convert_to_object
+Vestigingsnummer,5,2,convert_to_object
+NaamInstellingVooropleiding,7,30,convert_to_object
+PostcodeInstellingVooropleiding,37,4,convert_to_object
+PlaatsInstellingVooropleiding,41,24,convert_to_object
+DatumOprichtingInstellingVooropleiding,65,8,convert_to_date
+DatumOpheffingInstellingVooropleiding,73,8,convert_to_date
+DenominatieInstellingVooropleidingCode,81,3,convert_to_object
+NaamDenominatieInstellingVooropleiding,84,30,convert_to_object
