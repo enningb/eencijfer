@@ -39,7 +39,7 @@ repos:
     rev: 1.7.4
     hooks:
       - id: bandit
-        args: ["--exclude_dirs ./tests/*,./eencijfer/tests/*"]
+        exclude: ^tests/
   - repo: https://github.com/hadialqattan/pycln
     rev: v2.1.1
     hooks:
