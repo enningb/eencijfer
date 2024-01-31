@@ -2,7 +2,7 @@
 
 __author__ = """Bram Enning"""
 __email__ = 'bramenning@gmail.com'
-__version__ = '0.2.18'
+__version__ = '2023.0.1'
 __app_name__ = 'eencijfer'
 
 import logging
