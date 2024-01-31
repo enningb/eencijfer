@@ -34,6 +34,7 @@ def main(
         "--version",
         "-v",
         help="Show the application's version and exit. Try running `eencijfer init`",
+        callback=_version_callback,
         is_eager=True,
     ),
 ) -> None:

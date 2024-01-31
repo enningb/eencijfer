@@ -32,8 +32,6 @@ repos:
         args:
           - "--max-line-length=128"
           - "--ignore=B008"
-        per-file-ignores:
-          - eencijfer/cli.py:B008
         additional_dependencies:
           - flake8-bugbear
           - flake8-comprehensions
