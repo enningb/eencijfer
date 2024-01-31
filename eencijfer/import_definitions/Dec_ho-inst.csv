@@ -1,0 +1,3 @@
+Label,StartingPosition,NumberOfPositions,Converter
+AdministratienummerOWI,1,4,convert_to_object
+NaamInstelling,5,90,convert_to_object

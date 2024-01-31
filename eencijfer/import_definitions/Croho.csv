@@ -1,0 +1,14 @@
+Label,StartingPosition,NumberOfPositions,Converter
+AdministratienummerOWI,1,4,convert_to_object
+Opleidingscode,5,5,convert_to_object
+ActueleInstellingInclBesturenfusies,10,4,convert_to_object
+ActueleInstellingExclBesturenfusies,14,4,convert_to_object
+OpleidingActueelEquivalent,18,5,convert_to_object
+OpleidingHistorischEquivalent,23,5,convert_to_object
+CrohoOnderdeelActueleOpleiding,28,1,convert_to_object
+CrohoSubonderdeelActueleOpleiding,29,2,convert_to_object
+SoortHogerOnderwijs,31,3,convert_to_object
+TypeHogerOnderwijsActueleOpleiding,34,2,convert_to_object
+OpleidingsnaamActueleOpleiding,36,120,convert_to_object
+IndicatieSoortOpleiding,156,2,convert_ind_soort_opleiding
+JointDegreeCode,158,5,convert_to_object

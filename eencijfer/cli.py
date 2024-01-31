@@ -1,22 +1,62 @@
 """Console script for eencijfer."""
 
+from typing import Optional
+
 import typer
+from typing_extensions import Annotated
 
-from eencijfer import CONFIG_FILE
+from eencijfer import APP_NAME, CONFIG_FILE, __version__
+from eencijfer.eencijfer import ExportFormat, _convert_to_export_format
+from eencijfer.init import _create_default_config
 
-app = typer.Typer(
-    name="eencijfer",
-    help="ETL-tool for Dutch eencijfer",
-)
+app = typer.Typer(name="eencijfer", help="ETL-tool for Dutch eencijfer", no_args_is_help=True)
+
+
+def _version_callback(value: bool) -> None:
+    """Generates version nummber.
+
+    Args:
+        value (bool): boolean of there is a version
+
+    Raises:
+        typer.Exit: description
+    """
+    if value:
+        typer.echo(f"{APP_NAME} v{__version__}")
+
+        raise typer.Exit()
 
 
 @app.callback()
-def callback():
-    """ETL-tool for Dutch eencijfer."""
+def main(
+    version: Optional[bool] = typer.Option(
+        None,
+        "--version",
+        "-v",
+        help="Show the application's version and exit. Try running `eencijfer init`",
+        is_eager=True,
+    ),
+) -> None:
+    """Eencijfer ETL-tool.
+
+    Args:
+        version (Optional[bool], optional): _description_. Defaults to typer.Option( None, "--version", "-v",
+        help="Show the application's version and exit.", callback=_version_callback, is_eager=True, ).
+    """
+    _version_callback()
+    return
 
 
-# create commandline tool with code like below:
 @app.command()
-def example_command():
-    """Print configfile path."""
-    typer.echo(f"The configfile is at: {CONFIG_FILE} ")
+def init():
+    """Initializes eencijfer-package."""
+    _create_default_config(CONFIG_FILE)
+
+
+@app.command()
+def convert(
+    export_format: Annotated[ExportFormat, typer.Option(case_sensitive=False)] = ExportFormat.parquet,
+    use_column_converters: Annotated[bool, typer.Option("--use-column-converts/--not-use-column-converters", "-c/-C")] = False,
+):
+    """Convert eencijfer-files to desired format."""
+    _convert_to_export_format(export_format=export_format.value, use_column_converters=use_column_converters)

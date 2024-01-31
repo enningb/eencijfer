@@ -1,0 +1,7 @@
+Label,StartingPosition,NumberOfPositions,Converter
+LandCode,1,4,convert_to_object
+Land,5,40,convert_to_object
+EtniciteitCode,45,1,convert_to_object
+Etniciteit,46,12,convert_to_object
+EtniciteitLangCode,48,2,convert_to_object
+EtniciteitLang,50,32,convert_to_object

@@ -1,0 +1,3 @@
+Label,StartingPosition,NumberOfPositions,Converter
+VooropleidingCode,1,5,convert_to_object
+OmschrijvingVooropleiding,6,72,convert_to_object

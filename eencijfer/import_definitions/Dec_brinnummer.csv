@@ -1,0 +1,9 @@
+Label,StartingPosition,NumberOfPositions,Converter
+Brinnummer,1,4,convert_to_object
+NaamInstelling, 5,30,convert_to_object
+Postcodecijfers,35,4,convert_to_object
+Plaats,39,24,convert_to_object
+DatumOprichting,63,8,convert_to_object
+DatumOpheffing,71,8,convert_to_object
+DenominatieCode,79,3,convert_to_object
+NaamDenominatie,82,30,convert_to_object

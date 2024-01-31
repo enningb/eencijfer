@@ -25,14 +25,15 @@ repos:
         language_version: "python3.10"
         args:
           - --line-length=128
-      - id: black-jupyter
-        language_version: python3.10
   - repo: https://github.com/PyCQA/flake8
     rev: 5.0.4
     hooks:
       - id: flake8
         args:
           - "--max-line-length=128"
+          - "--ignore=B008"
+        per-file-ignores:
+          - eencijfer/cli.py:B008
         additional_dependencies:
           - flake8-bugbear
           - flake8-comprehensions
@@ -41,6 +42,7 @@ repos:
     rev: 1.7.4
     hooks:
       - id: bandit
+        exclude: ^tests/
   - repo: https://github.com/hadialqattan/pycln
     rev: v2.1.1
     hooks:

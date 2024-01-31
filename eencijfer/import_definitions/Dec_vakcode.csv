@@ -1,0 +1,7 @@
+Label,StartingPosition,NumberOfPositions,Converter
+VakCode,1,4,convert_to_object
+VakOmschrijving,5,112,convert_to_object
+Vak,117,30,convert_to_object
+VakAfkorting,141,5,convert_to_object
+Datum1,146,8,convert_to_object
+Datum2,154,8,convert_to_object

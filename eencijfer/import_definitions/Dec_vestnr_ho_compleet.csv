@@ -1,0 +1,6 @@
+Label,StartingPosition,NumberOfPositions,Converter
+Brinnummer,1,4,convert_to_object
+Vestigingsnummer,5,2,convert_to_object
+GemeentenaamCroho,7,24,convert_to_object
+GemeenteCode,31,4,convert_to_object
+Gemeentenaam,35,36,convert_to_object

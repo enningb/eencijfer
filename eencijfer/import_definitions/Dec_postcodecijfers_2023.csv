@@ -1,0 +1,5 @@
+Label,StartingPosition,NumberOfPositions,Converter
+Postcodecijfers,1,4,convert_to_object
+Postbus,5,1,oject
+GemeenteCode,6,4,convert_to_object
+GemeenteNaam,10,36,oject
