@@ -57,7 +57,9 @@ def init():
 @app.command()
 def convert(
     export_format: Annotated[ExportFormat, typer.Option(case_sensitive=False)] = ExportFormat.parquet,
-    use_column_converters: Annotated[bool, typer.Option("--use-column-converts/--not-use-column-converters", "-c/-C")] = False,
+    use_column_converters: Annotated[
+        bool, typer.Option("--use-column-converters/--not-use-column-converters", "-c/-C")
+    ] = False,
 ):
     """Convert eencijfer-files to desired format."""
     _convert_to_export_format(export_format=export_format.value, use_column_converters=use_column_converters)
