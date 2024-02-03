@@ -38,7 +38,6 @@ def _match_file_to_definition(fpath: Path, config: configparser.ConfigParser = c
     Returns:
         Optional[Path]: Path to definition file.
     """
-
     definition_dir = config.get('default', 'import_definitions_dir')
     logger.debug(f"maak lijst met bestanden in {definition_dir}")
     definition_files = [p for p in Path(definition_dir).iterdir() if p.suffix in [".csv"]]
