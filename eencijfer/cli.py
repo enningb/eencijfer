@@ -44,7 +44,7 @@ def main(
         version (Optional[bool], optional): _description_. Defaults to typer.Option( None, "--version", "-v",
         help="Show the application's version and exit.", callback=_version_callback, is_eager=True, ).
     """
-    _version_callback()
+    # _version_callback()
     return
 
 
