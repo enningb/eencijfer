@@ -72,7 +72,7 @@ def convert_to_none(x):
 
 @column_converter
 def convert_geslacht(x):
-    """Convert column to readable geslacht (man, vrouw)
+    """Convert column to readable geslacht (man, vrouw).
 
     Args:
         x (pd.Series): column
@@ -90,13 +90,26 @@ def convert_geslacht(x):
 
 @column_converter
 def convert_opleidingsvorm(x):
-    """Converts a value to int and than adds opleidingsvorm as string.
+    """Converts an integer code to its corresponding educational form.
+
+    This function takes an integer 'x' representing an educational form code and returns
+    the corresponding educational form as a string.
 
     Args:
-        x (pd.Series): column
+        x (int): An integer representing the educational form code.
 
     Returns:
-        pd.Series: all values will be in voltijd, deeltijd, duaal.
+        str: The corresponding educational form as a string ('voltijd', 'deeltijd', 'duaal').
+
+    Example:
+        >>> convert_opleidingsvorm(1)
+        'voltijd'
+        >>> convert_opleidingsvorm(2)
+        'deeltijd'
+        >>> convert_opleidingsvorm(3)
+        'duaal'
+        >>> convert_opleidingsvorm(4)
+        4  # Returns the input 'x' as is for unknown codes.
     """
 
     if int(x) == 1:
