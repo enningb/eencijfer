@@ -2,6 +2,7 @@
 import configparser
 import logging
 from pathlib import Path
+from typing import Optional
 
 import typer
 
@@ -11,7 +12,7 @@ from eencijfer.eencijfer import _get_list_of_eencijfer_files_in_dir
 logger = logging.getLogger(__name__)
 
 
-def _get_eencijfer_datafile(source_dir: Path) -> str:
+def _get_eencijfer_datafile(source_dir: Path) -> Optional[str]:
     """Get the name of the eencijfer-file in the given directory.
 
     Args:
@@ -38,7 +39,7 @@ def _get_eencijfer_datafile(source_dir: Path) -> str:
     return eencijfer_datafile
 
 
-def _get_eindexamen_datafile(source_dir: Path) -> str:
+def _get_eindexamen_datafile(source_dir: Path) -> Optional[str]:
     """Get the name of the file with the eindexamen-scores.
 
     Args:
@@ -74,7 +75,6 @@ def _create_default_config(CONFIG_FILE: Path) -> None:
     default_source_dir = Path.home() / __app_name__ / "eencijfer"
 
     config = configparser.ConfigParser()
-    config.optionxform = str  # So capitals stay capitals
 
     try:
         config.read(CONFIG_FILE)
