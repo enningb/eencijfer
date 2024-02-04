@@ -47,19 +47,38 @@ def _match_file_to_definition(fpath: Path, config: configparser.ConfigParser = c
     if len(set(definition_files)) != len(definition_files):
         raise Exception('Duplicate definition files found.')
 
-    matching_definition_file = [d for d in definition_files if fpath.stem == d.stem]
+    matching_definition_file = None
 
-    if len(matching_definition_file) == 1:
-        matching_definition_file = matching_definition_file[0]
-    elif 'EV' in fpath.stem:
-        matching_definition_file = [d for d in definition_files if d.stem.startswith('EV')][0]
-    elif 'VAKHAV' in fpath.stem:
-        matching_definition_file = [d for d in definition_files if d.stem.startswith('VAKHAV')][0]
+    try:
+        matching_definition_file = [d for d in definition_files if fpath.stem == d.stem][0]
+    except TypeError:
+        logger.debug(f"No definition file found for {fpath.stem} yet...")
+    except IndexError:
+        pass
+
+    if not matching_definition_file and 'EV' in fpath.stem:
+        try:
+            matching_definition_file = [d for d in definition_files if d.stem.startswith('EV')][0]
+        except TypeError:
+            pass
+        except IndexError:
+            pass
+    if not matching_definition_file and 'VAKHAV' in fpath.stem:
+        try:
+            matching_definition_file = [d for d in definition_files if d.stem.startswith('VAKHAV')][0]
+        except TypeError:
+            pass
+        except IndexError:
+            pass
+
     return matching_definition_file
 
 
 def _get_list_of_eencijfer_files_in_dir(config: configparser.ConfigParser = config) -> Optional[list]:
     """Gets list of eencijfer-files that are in eencijfer_dir.
+
+    Get a list of eencijfer-files in the given source_dir (in config-file). Gives a list
+    of files that match the names of the files in the definition-dir.
 
     Args:
         config (configparser.ConfigParser, optional): _description_. Defaults to config.
@@ -92,8 +111,9 @@ def _create_definition_with_converter(
     definition_file: Path,
 ) -> pd.DataFrame:
     """Creates a dataframe with metadata based an the definition-file.
-    Adds a column with convert-function, if no converter is given the column
-    will be in string format.
+
+    Adds a column to the data from a definition-file with a convert-function,
+    if no converter is given the column will be in string format.
 
     Args:
         definition_file (Path): Path to definition-file.
@@ -138,9 +158,11 @@ def _create_definition_with_converter(
 
 
 def read_asc(fpath: Path, definition_file: Path, use_column_converters: bool = False) -> pd.DataFrame:
-    """Reads in asc-file based on definition-file.  zo'n converter kan een eerste opschoning
-    of datatyping worden gedaan. Voorbeelden daarvan zijn waarden als '0' op missing zetten,
-    een datum-kolom als datum-type importeren etc.
+    """Reads in asc-file based on definition-file.
+
+    Converters contain column-names, widths and column-converters which are used for
+    converting data to the right datatype. For example: convert strings to int64 or
+    set a '0-value' as a missing (NaN).
 
     Args:
         fpath (Path): Path to asc-file.
@@ -243,16 +265,20 @@ def _convert_to_export_format(
     export_format: str = 'parquet',
     use_column_converters: bool = False,
 ) -> None:
-    """Converts all eencijfer-files in the source-dir to the specified format.
+    """Saves data to the export format.
+
+    Main function that reads and converts to export-format, to the
+    result-directory specified in the config-file.
 
     Args:
-        config (configparser.ConfigParser, optional): _description_. Defaults to config.
-        export_format (str, optional): File format to be used. Defaults to 'parquet'.
-        use_column_converters (bool, optional): Whether to convert columns from str to other
-        dtypes, specified in the definition-file. Defaults to False.
+        df (pd.DataFrame): The DataFrame to be saved.
+        fname (str, optional): The filename to use for saving. Defaults to "unknown".
+        export_format (str, optional): The export format to use. Defaults to 'parquet'.
+        config (configparser.ConfigParser, optional): The configuration parser
+          containing the result directory. Defaults to config.
 
     Returns:
-        None: None
+        None: This function does not return a value.
     """
     # get list of files
     source_files = _get_list_of_eencijfer_files_in_dir()
