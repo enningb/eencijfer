@@ -9,11 +9,10 @@ from eencijfer import CONFIG_FILE
 logger = logging.getLogger(__name__)
 
 config = configparser.ConfigParser()
-config.optionxform = str  # So capitals stay capitals
 
 try:
     config = configparser.ConfigParser()
-    config.optionxform = str  # So capitals stay capitals
+    # config.optionxform = str  # So capitals stay capitals
     config.read(CONFIG_FILE)
     # # Directory containing all the .ASC files that are in LEESMIJ.zip:
 except Exception as e:

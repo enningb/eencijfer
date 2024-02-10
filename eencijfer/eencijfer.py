@@ -83,7 +83,6 @@ def _get_list_of_eencijfer_files_in_dir(config: configparser.ConfigParser = conf
     Args:
         config (configparser.ConfigParser, optional): _description_. Defaults to config.
 
-
     Returns:
         Optional[list]: List of files that are recognized as eencijfer-files.
     """
@@ -105,6 +104,25 @@ def _get_list_of_eencijfer_files_in_dir(config: configparser.ConfigParser = conf
         raise typer.Exit()
 
     return files
+
+
+def _create_dict_matching_eencijfer_and_definition_files() -> dict:
+    """Creates dictionary with matching eencijfer and definition-files.
+
+    Returns:
+        dict: Dictionary with eencijfer-definition-file pairs.
+    """
+    eencijfer_files = _get_list_of_eencijfer_files_in_dir()
+    result_dict = {}
+    if eencijfer_files is None:
+        raise Exception('No files found!')
+
+    for eencijfer_file in eencijfer_files:
+        matching_definition_file = _match_file_to_definition(eencijfer_file)
+        if isinstance(matching_definition_file, Path):
+            result_dict[eencijfer_file] = matching_definition_file
+
+    return result_dict
 
 
 def _create_definition_with_converter(
@@ -281,10 +299,14 @@ def _convert_to_export_format(
         None: This function does not return a value.
     """
     # get list of files
-    source_files = _get_list_of_eencijfer_files_in_dir()
-    for file in source_files:
-        definition_file = _match_file_to_definition(file)
+    # source_files = _get_list_of_eencijfer_files_in_dir()
+    eencijfer_definition_pairs = _create_dict_matching_eencijfer_and_definition_files()
+
+    for pair in eencijfer_definition_pairs:
         result_dir = Path(config.get('default', 'result_dir'))
+
+        file = pair.key
+        definition_file = pair.value
 
         target_fpath = Path(result_dir / file.name).with_suffix(".parquet")
 

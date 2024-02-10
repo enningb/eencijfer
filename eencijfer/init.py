@@ -55,7 +55,8 @@ def _get_eindexamen_datafile(source_dir: Path) -> Optional[str]:
         logger.debug(f"In {source_dir} the file {source_dir} will be used as eindexamenfile.")
 
     except IndexError:
-        logger.critical(f"In {source_dir} there is no file starting with 'VAKH' so it is assumed there is no eindexamenfile...")
+        logger.critical(f"In {source_dir} there is no file starting with 'VAKH' ")
+        logger.critical("so it is assumed there is no eindexamenfile...")
         logger.critical(
             f"...move this file to {source_dir} or change option 'eindexamen_datafile' in config-file at {CONFIG_FILE}."
         )
