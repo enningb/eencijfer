@@ -48,7 +48,7 @@ mkdocs-autorefs ="^0.5.0"
 pre-commit =  "^3.6.0"
 toml = "^0.10.2"
 bump-my-version = "^0.15.4"
-typer-cli="^0.0.13"
+
 
 [tool.poetry.scripts]
 eencijfer  = "eencijfer.cli:app"
