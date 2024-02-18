@@ -156,6 +156,13 @@ def _create_definition_with_converter(
     logger.debug(f"{converter_functions}")
     logger.debug(f"...reading definition file {definition_file}")
     definition = pd.read_csv(definition_file)
+
+    logger.debug("...add garbage column to detect garbage.")
+    definition['LastPosition'] = definition.StartingPosition + definition.NumberOfPositions
+    starting_position_garbage_colum = definition.LastPosition.max()
+
+    definition.loc[len(definition)] = ['GarbageColumn', starting_position_garbage_colum, 10, 'convert_to_object', 1000]
+
     logger.debug(f"...add column with column_converter_functions to definition {definition_file.name}")
 
     definition = pd.merge(
@@ -224,9 +231,29 @@ def read_asc(fpath: Path, definition_file: Path, use_column_converters: bool = F
             logger.info(f"...no data found in {fpath.name}")
         else:
             logger.info(f"...data was read from {fpath.name}")
+            # A column is added at the end of the definition file, that will
+            # catch data that is not defined in the definition file. If there is
+            # data in the GarbageColumn this means the definition file does not contain
+            # the right definitions (otherwise all the data would fit into the defined
+            # columns).
+            # Later on the GarbageColumn will be removed if it is empty.
+
+            number_of_not_null_values_in_garbage_columns = data.GarbageColumn.notnull().sum()
+            if number_of_not_null_values_in_garbage_columns > 0:
+                logger.critical(f'!!!! The garbage-column for {fpath.name} is not empty, check your definitions !!!')
+                logger.critical('!!!! Below are some examples of the rows with non-empty GarbageColumns !!!')
+                logger.critical(' ')
+                examples_non_empty_garbage_columns = data[data.GarbageColumn.notnull()].head(10)
+                logger.critical(f'{examples_non_empty_garbage_columns}')
+                logger.critical(' ')
+                logger.critical(f'!!!! The garbage-column for {fpath.name} is not empty, check your definitions !!!')
+            else:
+                logger.debug("No garbage detected.")
+                logger.debug(f'The garbage-column for {fpath.name} is empty, removing GarbageColumn from dataframe.')
+                del data['GarbageColumn']
 
     except Exception as e:
-        logger.warning(f"...inlezen van {fpath.name} mislukt.")
+        logger.warning(f"...reading of {fpath.name} failed.")
         logger.warning(f"{e}")
 
     return data
