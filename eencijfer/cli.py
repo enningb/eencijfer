@@ -58,7 +58,7 @@ def init():
 @app.command()
 def convert(
     config=config,
-    export_format: Annotated[ExportFormat, typer.Option(case_sensitive=False)] = ExportFormat.parquet,
+    export_format: ExportFormat = ExportFormat.parquet,
     use_column_converters: Annotated[
         bool, typer.Option("--use-column-converters/--not-use-column-converters", "-c/-C")
     ] = False,
