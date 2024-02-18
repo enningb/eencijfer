@@ -71,6 +71,7 @@ def _match_file_to_definition(fpath: Path, config: configparser.ConfigParser = c
         except IndexError:
             pass
 
+    logger.debug(f"Definition-file for {fpath.stem} is set to: {matching_definition_file}")
     return matching_definition_file
 
 
@@ -86,7 +87,6 @@ def _get_list_of_eencijfer_files_in_dir(config: configparser.ConfigParser = conf
     Returns:
         Optional[list]: List of files that are recognized as eencijfer-files.
     """
-
     source_dir = config.get('default', 'source_dir')
     files = None
     try:
@@ -121,6 +121,7 @@ def _create_dict_matching_eencijfer_and_definition_files() -> dict:
         matching_definition_file = _match_file_to_definition(eencijfer_file)
         if isinstance(matching_definition_file, Path):
             result_dict[eencijfer_file] = matching_definition_file
+            logger.debug(f"{eencijfer_file.stem} is matched to: {matching_definition_file}")
 
     return result_dict
 
@@ -298,16 +299,11 @@ def _convert_to_export_format(
     Returns:
         None: This function does not return a value.
     """
-    # get list of files
-    # source_files = _get_list_of_eencijfer_files_in_dir()
+    # get dict with files and definitions:
     eencijfer_definition_pairs = _create_dict_matching_eencijfer_and_definition_files()
+    result_dir = Path(config.get('default', 'result_dir'))
 
-    for pair in eencijfer_definition_pairs:
-        result_dir = Path(config.get('default', 'result_dir'))
-
-        file = pair.key
-        definition_file = pair.value
-
+    for file, definition_file in eencijfer_definition_pairs.items():
         target_fpath = Path(result_dir / file.name).with_suffix(".parquet")
 
         logger.info("**************************************")

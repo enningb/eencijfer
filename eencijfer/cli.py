@@ -8,7 +8,6 @@ from typing_extensions import Annotated
 from eencijfer import APP_NAME, CONFIG_FILE, __version__
 from eencijfer.eencijfer import ExportFormat, _convert_to_export_format
 from eencijfer.init import _create_default_config
-from eencijfer.settings import config
 
 app = typer.Typer(name="eencijfer", help="ETL-tool for Dutch eencijfer", no_args_is_help=True)
 
@@ -57,11 +56,10 @@ def init():
 
 @app.command()
 def convert(
-    config=config,
     export_format: ExportFormat = ExportFormat.parquet,
     use_column_converters: Annotated[
         bool, typer.Option("--use-column-converters/--not-use-column-converters", "-c/-C")
     ] = False,
 ):
     """Convert eencijfer-files to desired format."""
-    _convert_to_export_format(config=config, export_format=export_format.value, use_column_converters=use_column_converters)
+    _convert_to_export_format(export_format=export_format.value, use_column_converters=use_column_converters)

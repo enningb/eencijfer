@@ -8,8 +8,6 @@ from eencijfer import CONFIG_FILE
 
 logger = logging.getLogger(__name__)
 
-config = configparser.ConfigParser()
-
 try:
     config = configparser.ConfigParser()
     # config.optionxform = str  # So capitals stay capitals
