@@ -1,12 +1,8 @@
 # eencijfer
-
-
 [![pypi](https://img.shields.io/pypi/v/eencijfer.svg)](https://pypi.org/project/eencijfer/)
 [![python](https://img.shields.io/pypi/pyversions/eencijfer.svg)](https://pypi.org/project/eencijfer/)
 [![Build Status](https://github.com/enningb/eencijfer/actions/workflows/dev.yml/badge.svg)](https://github.com/enningb/eencijfer/actions/workflows/dev.yml)
 [![codecov](https://codecov.io/gh/enningb/eencijfer/branch/main/graphs/badge.svg)](https://codecov.io/github/enningb/eencijfer)
-
-
 
 ETL-tool for Dutch eencijfer
 
@@ -23,4 +19,4 @@ ETL-tool for Dutch eencijfer
 
 ## Credits
 
-This package was created with [Cookiecutter](https://github.com/audreyr/cookiecutter) and the [waynerv/cookiecutter-pypackage](https://github.com/waynerv/cookiecutter-pypackage) project template.
+This package was created with [Cookiecutter](https://github.com/audreyr/cookiecutter) and the [enningb/cookiecutter-pypackage](https://github.com/enningb/cookiecutter-pypackage) project template.

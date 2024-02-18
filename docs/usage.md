@@ -1,7 +1,20 @@
 # Usage
 
-To use eencijfer in a project
+To use eencijfer open a console, and initialize
 
 ```
-import eencijfer
+eencijfer init
+```
+
+You can get help for the different commands with:
+
+```
+eencijfer --help
+```
+
+
+Convert eencijfer-files to an exportformat like parquet (default) or csv:
+
+```
+eencijfer convert --export-format csv
 ```
