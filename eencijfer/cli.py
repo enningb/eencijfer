@@ -8,6 +8,7 @@ from typing_extensions import Annotated
 from eencijfer import APP_NAME, CONFIG_FILE, __version__
 from eencijfer.eencijfer import ExportFormat, _convert_to_export_format
 from eencijfer.init import _create_default_config
+from eencijfer.qa import compare_eencijfer_files_and_definitions
 
 app = typer.Typer(name="eencijfer", help="ETL-tool for Dutch eencijfer", no_args_is_help=True)
 
@@ -63,3 +64,10 @@ def convert(
 ):
     """Convert eencijfer-files to desired format."""
     _convert_to_export_format(export_format=export_format.value, use_column_converters=use_column_converters)
+
+
+@app.command()
+def qa():
+    """Show overlap between eencijfer-files and definitions."""
+    overlap = compare_eencijfer_files_and_definitions()
+    typer.echo(overlap)

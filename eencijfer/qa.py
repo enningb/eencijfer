@@ -8,14 +8,14 @@ from eencijfer.eencijfer import _get_list_of_eencijfer_files_in_dir, _match_file
 from eencijfer.settings import config
 
 
-def compare_eencijfer_files_and_definitions(config: configparser.ConfigParser = config) -> None:
+def compare_eencijfer_files_and_definitions(config: configparser.ConfigParser = config) -> pd.DataFrame:
     """Compare definition files and eencijfer files.
 
     Args:
         config (configparser.ConfigParser, optional): _description_. Defaults to config.
 
     Returns:
-        None: prints out df.
+        pd.DataFrame: prints out df.
     """
     eencijfer_fpaths = _get_list_of_eencijfer_files_in_dir()
     eencijfer_files = [f.stem for f in eencijfer_fpaths]
@@ -32,5 +32,4 @@ def compare_eencijfer_files_and_definitions(config: configparser.ConfigParser = 
 
     result = pd.concat([eencijfer_df, definition_without_eencijfer]).fillna('❌')
 
-    print(result)
-    return None
+    return result
