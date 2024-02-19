@@ -18,8 +18,9 @@ def compare_eencijfer_files_and_definitions(config: configparser.ConfigParser = 
         pd.DataFrame: prints out df.
     """
     eencijfer_fpaths = _get_list_of_eencijfer_files_in_dir()
-    eencijfer_files = [f.stem for f in eencijfer_fpaths]
-    eencijfer_df = pd.DataFrame({'eencijfer_file': eencijfer_files, 'path': eencijfer_fpaths})
+    if eencijfer_fpaths is not None:
+        eencijfer_files: list = [f.stem for f in eencijfer_fpaths]
+    eencijfer_df: pd.DataFrame = pd.DataFrame({'eencijfer_file': eencijfer_files, 'path': eencijfer_fpaths})
 
     eencijfer_df['definition'] = eencijfer_df['path'].apply(_match_file_to_definition)
 
