@@ -107,5 +107,10 @@ VerblijfsjaarContinuHogerOnderwijs,283,2,convert_to_object
 VerblijfsjaarContinuSoortHogerOnderwijs,285,2,convert_to_object
 VerblijfsjaarContinuActueleInstelling,287,2,convert_to_object
 VerblijfsjaarContinuTypeHoBinnenHo,289,2,convert_to_object
-Burgerservicenummer,291,9,convert_to_object
-Onderwijsnummer,300,9,convert_to_object
+IndicatieUniversityCollege,291,1,convert_to_object
+ISCEDF2013Rubriek,292,6,convert_to_object
+HerkomstlandVolgensCbsDefinitie,298,4,convert_to_object
+HerkomstIndikkingVolgensCbsDefinitie,302,2,convert_to_object
+IndicatieGeboren,304,2,convert_to_object
+Burgerservicenummer,306,9,convert_to_object
+Onderwijsnummer,315,9,convert_to_object
