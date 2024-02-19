@@ -1,0 +1,4 @@
+Label,StartingPosition,NumberOfPositions,Converter
+CodeLand,1,4,convert_to_object
+HerkomstIndikkingVolgensCbsDefinitie,5,2,convert_to_object
+HerkomstIndikkingVolgensCbsDefinitieOmschrijving,7,40,convert_to_object
