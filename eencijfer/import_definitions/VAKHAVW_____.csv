@@ -18,4 +18,5 @@ EersteEindcijfer,57,2,convert_to_int_zero_to_nan
 TweedeEindcijfer,59,2,convert_to_int_zero_to_nan
 DerdeEindcijfer,61,2,convert_to_int_zero_to_nan
 CijferCijferlijst,63,2,convert_to_int_zero_to_nan
-BogusPGN,65,20,convert_to_none
+Burgerservicenummer,65,9,convert_to_int_zero_to_nan
+Onderwijsnummer,74,9,convert_to_int_zero_to_nan
