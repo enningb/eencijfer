@@ -1,4 +1,5 @@
 """Data asset cohorten."""
+
 import logging
 
 import numpy as np
