@@ -51,7 +51,7 @@ def main(
         help="Show the application's version and exit.", callback=_version_callback, is_eager=True, ).
     """
     # _version_callback()
-    return
+    return None
 
 
 @app.command()
@@ -66,7 +66,7 @@ def convert(
     use_column_converters: Annotated[bool, typer.Option("--use-column-converters/--not-use-column-converters", "-c/-C")] = True,
     remove_pii: Annotated[bool, typer.Option("--remove-pii/--do-not-remove-pii", "-p/-P")] = True,
 ):
-    """Convert eencijfer-files to desired format."""
+    """Convert eencijfer-files to desired exportformat."""
     _convert_to_export_format(
         export_format=export_format.value, use_column_converters=use_column_converters, remove_pii=remove_pii
     )
@@ -84,6 +84,7 @@ def qa():
 @app.command()
 def create_assets(export_format: ExportFormat = ExportFormat.parquet):
     """Create data-assets and save them to assests-directory."""
+
     eencijfer = _create_eencijfer_df()
     _save_to_file(eencijfer, dir=Path('/Users/bramenning/eencijfer/assets'), fname='eencijfer', export_format='parquet')
     cohorten = create_cohorten_met_indicatoren()
