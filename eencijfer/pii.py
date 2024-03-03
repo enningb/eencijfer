@@ -104,13 +104,15 @@ def _empty_id_fields(
     Returns:
         pd.DataFrame: data minus sensitive fields
     """
-    sensitive_fields: list = (["Onderwijsnummer", "Burgerservicenummer"],)
+    sensitive_fields: list = ["Onderwijsnummer", "Burgerservicenummer"]
     logger.debug("Check whether there are fields to be emptied....")
     fields_in_data_to_be_emptied = [field for field in sensitive_fields if field in data]
-
-    for field in fields_in_data_to_be_emptied:
-        logger.info(f"Removing all values from column: {field}.")
-        data[field] = np.nan
+    if len(fields_in_data_to_be_emptied) > 0:
+        for field in fields_in_data_to_be_emptied:
+            logger.info(f"Removing all values from column: {field}.")
+            data[field] = np.nan
+    else:
+        logger.info(f"No columns to be emptied.")
 
     if len(fields_in_data_to_be_emptied) == 0:
         logger.debug(f"...no column found with names {sensitive_fields}, nothing to be removed.")
