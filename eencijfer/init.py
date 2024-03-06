@@ -1,4 +1,5 @@
 """Initialize eencijfer config file."""
+
 import configparser
 import logging
 from pathlib import Path
@@ -67,44 +68,6 @@ def _get_eindexamen_datafile(source_dir: Path) -> Optional[str]:
             f"...move this file to {source_dir} or change option 'eindexamen_datafile' in config-file at {CONFIG_FILE}."
         )
     return eindexamen_datafile
-
-
-def _get_config(
-    CONFIG_FILE: Path,
-    result_dir: Path = default_result_dir,
-    source_dir: Path = default_source_dir,
-    import_definitions_dir: Path = default_import_definitions_dir,
-    use_column_converter: bool = False,
-    remove_pii: bool = True,
-) -> configparser.ConfigParser:
-    config = configparser.ConfigParser()
-
-    try:
-        config.read(CONFIG_FILE)
-        if not config.has_section('default'):
-            config.add_section('default')
-        if not config.has_option('default', 'source_dir'):
-            config.set('default', 'source_dir', source_dir.as_posix())
-            eencijfer_files = _get_list_of_eencijfer_files_in_dir(config)
-            if not eencijfer_files:
-                typer.echo(f"No eencijfer-files found at {source_dir}. Move them or...")
-                typer.echo(f"...edit the config-file at {CONFIG_FILE}")
-        if not config.has_option('default', 'result_dir'):
-            config.set('default', 'result_dir', result_dir.as_posix())
-        if not config.has_option('default', 'assets_dir'):
-            config.set('default', 'assets_dir', Path(result_dir / "assets").as_posix())
-        if not config.has_option('default', 'import_definitions_dir'):
-            config.set('default', 'import_definitions_dir', import_definitions_dir.as_posix())
-        if not config.has_option('default', 'use_column_converter'):
-            config.set('default', 'use_column_converter', use_column_converter)
-        if not config.has_option('default', 'remove_pii'):
-            config.set('default', 'remove_pii', remove_pii)
-
-    except Exception as e:
-        logger.debug(f"{e}")
-        logger.debug("Something went wrong reading config file...")
-
-    return config
 
 
 def _create_default_config(CONFIG_FILE: Path) -> None:

@@ -1,4 +1,5 @@
 """Vooropleiding and InstellingVooropleiding."""
+
 import configparser
 import logging
 from pathlib import Path
@@ -115,6 +116,9 @@ def _add_profiel_havo_vwo(Dec_vopl: pd.DataFrame) -> pd.DataFrame:
         right_on="VooropleidingCode",
         how="left",
     )
+    if len(vooropleiding) != len(Dec_vopl):
+        raise Exception('Lengths of dataframes do not match, something went wrong merging.')
+
     vooropleiding["VooropleidingCode"] = vooropleiding["VooropleidingCode"].astype(str)
     return vooropleiding
 
@@ -162,6 +166,30 @@ def _add_vooropleiding(
 
     # assert len(eencijfer.columns) == len(result.columns) - 3
 
+    return result
+
+
+def _add_oorspronkelijke_vooropleiding(data: pd.DataFrame) -> pd.DataFrame:
+    """Voegt gegevens toe over type vooropleiding aan eindexamencijfers.
+
+    Args:
+        data (pd.DataFrame): dataframe met eindexamencijfers.
+
+    Returns:
+        pd.DataFrame: dataframe met extra informatie over voorpleiding
+    """
+    result_path = Path(config.get('default', 'result_dir'))
+    Dec_vooropl = pd.read_parquet(result_path / 'Dec_vooropl.parquet')
+
+    result = pd.merge(
+        data,
+        Dec_vooropl,
+        left_on=["VooropleidingOorspronkelijkeCode"],
+        right_on=["VooropleidingOorspronkelijkeCode"],
+        how="left",
+    )
+    if len(data) != len(result):
+        raise Exception('Lengths of dataframes do not match, something went wrong merging.')
     return result
 
 

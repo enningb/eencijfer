@@ -9,11 +9,13 @@ from typing_extensions import Annotated
 from eencijfer import APP_NAME, CONFIG_FILE, __version__
 from eencijfer.assets.cohorten import create_cohorten_met_indicatoren
 from eencijfer.assets.eencijfer import _create_eencijfer_df
+from eencijfer.assets.eindexamencijfers import _create_eindexamencijfer_df
 from eencijfer.eencijfer import ExportFormat, _convert_to_export_format
 from eencijfer.init import _create_default_config
 from eencijfer.io.file import _save_to_file
 from eencijfer.pii import _replace_all_pgn_with_pseudo_id_remove_pii
 from eencijfer.qa import compare_eencijfer_files_and_definitions
+from eencijfer.settings import config
 
 app = typer.Typer(name="eencijfer", help="ETL-tool for Dutch eencijfer", no_args_is_help=True)
 
@@ -84,8 +86,16 @@ def qa():
 @app.command()
 def create_assets(export_format: ExportFormat = ExportFormat.parquet):
     """Create data-assets and save them to assests-directory."""
+    assets_dir = Path(config.get('default', 'assets_dir'))
 
     eencijfer = _create_eencijfer_df()
-    _save_to_file(eencijfer, dir=Path('/Users/bramenning/eencijfer/assets'), fname='eencijfer', export_format='parquet')
+    _save_to_file(eencijfer, dir=assets_dir, fname='eencijfer', export_format='parquet')
     cohorten = create_cohorten_met_indicatoren()
-    _save_to_file(cohorten, dir=Path('/Users/bramenning/eencijfer/assets'), fname='cohorten', export_format='parquet')
+    _save_to_file(cohorten, dir=assets_dir, fname='cohorten', export_format='parquet')
+    eindexamencijfers = _create_eindexamencijfer_df()
+    _save_to_file(
+        eindexamencijfers,
+        dir=assets_dir,
+        fname='eindexamencijfers',
+        export_format='parquet',
+    )

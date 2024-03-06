@@ -1,4 +1,5 @@
 """Eencijfer data asset."""
+
 import logging
 from pathlib import Path
 
