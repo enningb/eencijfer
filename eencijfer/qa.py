@@ -1,6 +1,6 @@
 """Convenience functions for quality assurance."""
+
 import configparser
-from pathlib import Path
 
 import pandas as pd
 
@@ -24,7 +24,7 @@ def compare_eencijfer_files_and_definitions(config: configparser.ConfigParser = 
 
     eencijfer_df['definition'] = eencijfer_df['path'].apply(_match_file_to_definition)
 
-    definition_dir = Path(config.get('default', 'import_definitions_dir'))
+    definition_dir = config.getpath('default', 'import_definitions_dir')
     definition_fpaths = [p for p in definition_dir.iterdir() if p.suffix in [".csv"]]
     definition_files = [f.stem for f in definition_fpaths]
     definition_df = pd.DataFrame({'eencijfer_file': definition_files, 'definition': definition_fpaths})

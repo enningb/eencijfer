@@ -2,7 +2,6 @@
 
 import configparser
 import logging
-from pathlib import Path
 
 import pandas as pd
 
@@ -138,7 +137,7 @@ def _add_vooropleiding(
         pd.DataFrame: eencijfer verrijkt met vooropleiding (profiel en verkorte notatie)
     """
 
-    result_path = Path(config.get('default', 'result_dir'))
+    result_path = config.getpath('default', 'result_dir')
     Dec_vopl = pd.read_parquet(result_path / 'Dec_vopl.parquet')
     vooropleiding = _add_profiel_havo_vwo(Dec_vopl)
     vooropleiding = _add_vooropleiding_kort(vooropleiding)
@@ -178,7 +177,7 @@ def _add_oorspronkelijke_vooropleiding(data: pd.DataFrame) -> pd.DataFrame:
     Returns:
         pd.DataFrame: dataframe met extra informatie over voorpleiding
     """
-    result_path = Path(config.get('default', 'result_dir'))
+    result_path = config.getpath('default', 'result_dir')
     Dec_vooropl = pd.read_parquet(result_path / 'Dec_vooropl.parquet')
 
     result = pd.merge(
@@ -206,7 +205,7 @@ def _add_naam_instelling_vooropleiding(
     Returns:
         pd.DataFrame: _description_
     """
-    result_path = Path(config.get('default', 'result_dir'))
+    result_path = config.getpath('default', 'result_dir')
     Dec_brinvestigingsnummer = pd.read_parquet(result_path / 'Dec_brinvestigingsnummer.parquet')
 
     if vooropleiding not in [

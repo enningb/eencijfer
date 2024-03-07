@@ -25,7 +25,7 @@ def _add_naam_opleiding(eencijfer: pd.DataFrame, config: configparser.ConfigPars
         pd.DataFrame: _description_
     """
     logger.debug("Controleer of Dec_isat maar 1 naam per Croho bevat.")
-    result_path = Path(config.get('default', 'result_dir'))
+    result_path = config.getpath('default', 'result_dir')
     Dec_isat = pd.read_parquet(result_path / 'Dec_isat.parquet')
 
     if not len(Dec_isat) == Dec_isat.Opleidingscode.nunique():

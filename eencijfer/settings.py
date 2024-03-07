@@ -23,7 +23,7 @@ def _get_config(
     use_column_converter: bool = False,
     remove_pii: bool = True,
 ) -> configparser.ConfigParser:
-    config = configparser.ConfigParser()
+    config = configparser.ConfigParser(converters={"path": lambda x: Path(x)})
 
     try:
         config.read(CONFIG_FILE)

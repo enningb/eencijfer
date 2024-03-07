@@ -14,7 +14,7 @@ logger = logging.getLogger(__name__)
 
 
 def _create_eindexamencijfer_df() -> pd.DataFrame:
-    result_path = Path(config.get('default', 'result_dir'))
+    result_path = config.getpath('default', 'result_dir')
 
     eindexamencijfers_fname = _get_eindexamen_datafile(result_path)
     if eindexamencijfers_fname is None:

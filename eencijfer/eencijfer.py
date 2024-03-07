@@ -1,4 +1,5 @@
 """Main eencijfer module."""
+
 import configparser
 import logging
 from enum import Enum
@@ -38,9 +39,9 @@ def _match_file_to_definition(fpath: Path, config: configparser.ConfigParser = c
     Returns:
         Optional[Path]: Path to definition file.
     """
-    definition_dir = config.get('default', 'import_definitions_dir')
+    definition_dir = config.getpath('default', 'import_definitions_dir')
     logger.debug(f"maak lijst met bestanden in {definition_dir}")
-    definition_files = [p for p in Path(definition_dir).iterdir() if p.suffix in [".csv"]]
+    definition_files = [p for p in definition_dir.iterdir() if p.suffix in [".csv"]]
     logger.debug(f"...{len(definition_files)} bestanden gevonden in {definition_dir}")
 
     # check for duplicate definion files.
@@ -87,13 +88,13 @@ def _get_list_of_eencijfer_files_in_dir(config: configparser.ConfigParser = conf
     Returns:
         Optional[list]: List of files that are recognized as eencijfer-files.
     """
-    source_dir = config.get('default', 'source_dir')
+    source_dir = config.getpath('default', 'source_dir')
     files = None
     try:
         logger.debug("Getting list of files ending with '.asc'...")
-        asc_files = [p for p in Path(source_dir).iterdir() if p.suffix.lower() == '.asc']
+        asc_files = [p for p in source_dir.iterdir() if p.suffix.lower() == '.asc']
         logger.debug("...looking for file starting with 'EV'...")
-        files = asc_files + [p for p in Path(source_dir).iterdir() if p.stem.startswith('EV')]
+        files = asc_files + [p for p in source_dir.iterdir() if p.stem.startswith('EV')]
         if len(files) == 0:
             typer.echo(f"No files found that in {source_dir} that could be eencijfer-files. Aborting...")
             raise typer.Exit()
@@ -285,7 +286,7 @@ def _convert_to_export_format(
     """
     # get dict with files and definitions:
     eencijfer_definition_pairs = _create_dict_matching_eencijfer_and_definition_files()
-    result_dir = Path(config.get('default', 'result_dir'))
+    result_dir = config.getpath('default', 'result_dir')
 
     for file, definition_file in eencijfer_definition_pairs.items():
         target_fpath = Path(result_dir / file.name).with_suffix(f".{export_format}")

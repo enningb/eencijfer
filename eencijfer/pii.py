@@ -132,7 +132,7 @@ def _replace_all_pgn_with_pseudo_id_remove_pii(config: configparser.ConfigParser
         None: Saves files to result_dir.
     """
     logger.debug('Replacing pgns and removing pii.')
-    result_dir = Path(config.get('default', 'result_dir'))
+    result_dir = config.getpath('default', 'result_dir')
 
     eencijfer_fname = _get_eencijfer_datafile(result_dir)
     if eencijfer_fname is None:

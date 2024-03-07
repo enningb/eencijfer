@@ -24,7 +24,7 @@ logger = logging.getLogger(__name__)
 def _create_eencijfer_df():
     """Pipeline voor verrijken van eencijfer-basisbestand."""
 
-    result_path = Path(config.get('default', 'result_dir'))
+    result_path = config.getpath('default', 'result_dir')
 
     eencijfer_fname = _get_eencijfer_datafile(result_path)
     eencijfer = pd.read_parquet(Path(result_path / eencijfer_fname).with_suffix('.parquet'))

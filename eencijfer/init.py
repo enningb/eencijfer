@@ -90,12 +90,13 @@ def _create_default_config(CONFIG_FILE: Path) -> None:
         config.read(CONFIG_FILE)
         if not config.has_section('default'):
             config.add_section('default')
-        source_dir = Path(config.get('default', 'source_dir', fallback=default_source_dir.as_posix()))
-        result_dir = Path(config.get('default', 'result_dir', fallback=default_result_dir.as_posix()))
-        assets_dir = Path(config.get('default', 'assets_dir', fallback=default_assets_dir.as_posix()))
-        import_definitions_dir = Path(
-            config.get('default', 'import_definitions_dir', fallback=default_import_definitions_dir.as_posix())
+        source_dir = config.getpath('default', 'source_dir', fallback=default_source_dir.as_posix())
+        result_dir = config.getpath('default', 'result_dir', fallback=default_result_dir.as_posix())
+        assets_dir = config.getpath('default', 'assets_dir', fallback=default_assets_dir.as_posix())
+        import_definitions_dir = config.getpath(
+            'default', 'import_definitions_dir', fallback=default_import_definitions_dir.as_posix()
         )
+
     except Exception as e:
         logger.debug(f"{e}")
         logger.debug("Despite error, adding default-section to config-object...")

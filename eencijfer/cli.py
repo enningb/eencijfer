@@ -1,6 +1,5 @@
 """Console script for eencijfer."""
 
-from pathlib import Path
 from typing import Optional
 
 import typer
@@ -86,7 +85,7 @@ def qa():
 @app.command()
 def create_assets(export_format: ExportFormat = ExportFormat.parquet):
     """Create data-assets and save them to assests-directory."""
-    assets_dir = Path(config.get('default', 'assets_dir'))
+    assets_dir = config.getpath('default', 'assets_dir')
 
     eencijfer = _create_eencijfer_df()
     _save_to_file(eencijfer, dir=assets_dir, fname='eencijfer', export_format='parquet')
