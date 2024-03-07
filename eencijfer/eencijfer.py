@@ -1,7 +1,6 @@
 """Main eencijfer module."""
 import configparser
 import logging
-from datetime import datetime
 from enum import Enum
 from pathlib import Path
 from typing import Optional
@@ -10,6 +9,7 @@ import pandas as pd
 import typer
 
 from eencijfer import CONVERTERS
+from eencijfer.io.file import _save_to_file
 from eencijfer.settings import config
 
 logger = logging.getLogger(__name__)
@@ -177,8 +177,8 @@ def _create_definition_with_converter(
     missing_converters = definition[definition.ConvertFunction.isnull()].Label.tolist()
 
     if len(missing_converters) > 0:
-        logger.warning(f"====> missing converters voor: {missing_converters}")
-        logger.warning("====> setting converters to 'convert_to_string'")
+        logger.warning(f"❌ ====> missing converters voor: {missing_converters}")
+        logger.warning("❌ ====> setting converters to 'convert_to_string'")
         definition["ConvertFunction"] = definition["ConvertFunction"].fillna(CONVERTERS['convert_to_object'])
     return definition
 
@@ -262,57 +262,11 @@ def read_asc(fpath: Path, definition_file: Path, use_column_converters: bool = F
     return data
 
 
-def _save_to_file(
-    df: pd.DataFrame,
-    fname: str = "unknown",
-    export_format: str = 'parquet',
-    config: configparser.ConfigParser = config,
-):
-    """Saves data in the export_format in the result-directory specified in the config.
-
-    Args:
-        df (pd.DataFrame): _description_
-        fname (str, optional): _description_. Defaults to "unknown".
-        export_format (ExportFormat, optional): _description_. Defaults to ExportFormat.parquet.
-        config (configparser.ConfigParser, optional): _description_. Defaults to config.
-
-    Returns:
-        None: None
-    """
-
-    today = datetime.today().strftime("%Y-%m-%d")
-    # voeg datum-directory toe aan path en maak aan:
-    result_dir = config.get('default', 'result_dir')
-    result_dir_date = Path(result_dir) / today
-
-    Path(result_dir_date).mkdir(parents=True, exist_ok=True)
-
-    # logger.debug(f"Renaming according to naming_convention: {naming_convention}...")
-
-    # if naming_convention == "pascalcase":
-    #     name = pascalcase(name)
-    #     new_col_names = [pascalcase(col) for col in data.columns]
-    #     data.columns = new_col_names
-    # elif naming_convention == "snakecase":
-    #     name = snakecase(name)
-    #     new_col_names = [snakecase(col) for col in data.columns]
-    #     data.columns = new_col_names
-
-    fsuffix = "." + export_format
-    target_fpath = Path(result_dir_date / fname).with_suffix(fsuffix)
-    logger.info(f"Saving {fname} to {target_fpath}...")
-    if export_format == 'csv':
-        df.to_csv(target_fpath, sep=",")
-    if export_format == 'parquet':
-        df.to_parquet(target_fpath)
-
-    return None
-
-
 def _convert_to_export_format(
     config: configparser.ConfigParser = config,
     export_format: str = 'parquet',
     use_column_converters: bool = False,
+    remove_pii: bool = True,
 ) -> None:
     """Saves data to the export format.
 
@@ -334,7 +288,7 @@ def _convert_to_export_format(
     result_dir = Path(config.get('default', 'result_dir'))
 
     for file, definition_file in eencijfer_definition_pairs.items():
-        target_fpath = Path(result_dir / file.name).with_suffix(".parquet")
+        target_fpath = Path(result_dir / file.name).with_suffix(f".{export_format}")
 
         logger.info("**************************************")
         logger.info("**************************************")
@@ -353,7 +307,7 @@ def _convert_to_export_format(
 
             if len(raw_data) > 0:
                 logger.warning(f"...reading {file.name} succeeded.")
-                _save_to_file(raw_data, fname=file.stem, export_format=export_format, config=config)
+                _save_to_file(raw_data, dir=result_dir, fname=file.stem, export_format=export_format)
 
             else:
                 logger.info(f"...there does not seem to be data in {file.name}!")
