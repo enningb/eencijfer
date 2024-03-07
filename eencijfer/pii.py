@@ -1,4 +1,5 @@
 """Tools for removing PII."""
+
 import configparser
 import logging
 from pathlib import Path
@@ -43,13 +44,13 @@ def _create_pgn_pseudo_id_table(
     ].drop_duplicates()
     if not len(koppeltabel) == data[identifier].nunique():
         raise Exception("Creating table failed...")
-    logger.debug(f"Create identifier by creating  random numbers and fill with 0 until 7 positions.")
+    logger.debug("Create identifier by creating  random numbers and fill with 0 until 7 positions.")
     koppeltabel[new_identifier] = np.random.permutation(koppeltabel[identifier].values)
     koppeltabel[new_identifier] = koppeltabel[new_identifier].astype(str)
     koppeltabel[new_identifier] = koppeltabel[new_identifier].str.zfill(7)
     if not len(koppeltabel) == koppeltabel[new_identifier].nunique():
         raise Exception("New identifier contains duplicates.")
-    logger.debug(f"Create index.")
+    logger.debug("Create index.")
     koppeltabel = koppeltabel.reset_index()
     del koppeltabel["index"]
 
@@ -112,7 +113,7 @@ def _empty_id_fields(
             logger.info(f"Removing all values from column: {field}.")
             data[field] = np.nan
     else:
-        logger.info(f"No columns to be emptied.")
+        logger.info("No columns to be emptied.")
 
     if len(fields_in_data_to_be_emptied) == 0:
         logger.debug(f"...no column found with names {sensitive_fields}, nothing to be removed.")
@@ -134,11 +135,16 @@ def _replace_all_pgn_with_pseudo_id_remove_pii(config: configparser.ConfigParser
     result_dir = Path(config.get('default', 'result_dir'))
 
     eencijfer_fname = _get_eencijfer_datafile(result_dir)
+    if eencijfer_fname is None:
+        raise Exception("No eencijfer-file found.")
     eencijfer_fpath = Path(result_dir / eencijfer_fname).with_suffix(f'.{export_format}')
     eencijfer = pd.read_parquet(eencijfer_fpath)
 
-    vakken_fnmame = _get_eindexamen_datafile(result_dir)
-    vakken_fpath = Path(result_dir / vakken_fnmame).with_suffix(f'.{export_format}')
+    vakken_fname = _get_eindexamen_datafile(result_dir)
+    if vakken_fname is None:
+        raise Exception("No eindexamen-file found.")
+
+    vakken_fpath = Path(result_dir / vakken_fname).with_suffix(f'.{export_format}')
     vakken = pd.read_parquet(vakken_fpath)
 
     logger.info('Creating table with pseudo-ids...')
@@ -151,5 +157,5 @@ def _replace_all_pgn_with_pseudo_id_remove_pii(config: configparser.ConfigParser
     logger.info(f'...removing pgn from {vakken_fpath}')
     vakken_no_pii = _replace_pgn_with_pseudo_id(vakken, koppeltabel)
     vakken_no_pii = _empty_id_fields(vakken_no_pii)
-    _save_to_file(vakken_no_pii, fname=vakken_fnmame, dir=result_dir, export_format=export_format)
+    _save_to_file(vakken_no_pii, fname=vakken_fname, dir=result_dir, export_format=export_format)
     return None

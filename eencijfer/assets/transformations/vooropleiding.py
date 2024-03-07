@@ -63,7 +63,7 @@ def _add_vooropleiding_kort(
     Returns:
         pd.DataFrame: _description_
     """
-    logger.info(f"...voeg korte omschrijving vooropleiding toe (mbo, vwo, etc)")
+    logger.info("...voeg korte omschrijving vooropleiding toe (mbo, vwo, etc)")
     Dec_vopl[new_column] = Dec_vopl[source_column].apply(_determine_vooropleiding)
     return Dec_vopl
 

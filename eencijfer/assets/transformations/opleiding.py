@@ -1,4 +1,5 @@
 """All functions regarding opleiding."""
+
 import configparser
 import logging
 from pathlib import Path
@@ -23,14 +24,14 @@ def _add_naam_opleiding(eencijfer: pd.DataFrame, config: configparser.ConfigPars
     Returns:
         pd.DataFrame: _description_
     """
-    logger.debug(f"Controleer of Dec_isat maar 1 naam per Croho bevat.")
+    logger.debug("Controleer of Dec_isat maar 1 naam per Croho bevat.")
     result_path = Path(config.get('default', 'result_dir'))
     Dec_isat = pd.read_parquet(result_path / 'Dec_isat.parquet')
 
     if not len(Dec_isat) == Dec_isat.Opleidingscode.nunique():
         raise Exception('Something went, Isat is not unique.')
 
-    logger.debug(f"Merge eencijfer met Dec_isat")
+    logger.debug("Merge eencijfer met Dec_isat")
     result = pd.merge(
         eencijfer,
         Dec_isat,
@@ -40,8 +41,8 @@ def _add_naam_opleiding(eencijfer: pd.DataFrame, config: configparser.ConfigPars
         suffixes=["", "_opleiding"],
     )
 
-    logger.debug(f"Controleer het resultaat...")
-    logger.debug(f"... geen missende namen")
+    logger.debug("Controleer het resultaat...")
+    logger.debug("... geen missende namen")
     if not result.NaamOpleiding.isnull().sum() == 0:
         raise Exception("Niet alle opleidingen hebben een naam")
 
@@ -54,10 +55,10 @@ def _add_naam_opleiding(eencijfer: pd.DataFrame, config: configparser.ConfigPars
 
         logger.info("Er zijn opleidingen zonder naam:")
         logger.info(f"{opleidingen_zonder_naam}")
-        logger.info(f"Missende waarden worden op 'onbekend' gezet.")
+        logger.info("Missende waarden worden op 'onbekend' gezet.")
         result.NaamOpleiding.fillna("onbekend", inplace=True)
 
-    logger.info(f"Hernoem NaamOpleiding naar NaamOpleidingCroho")
+    logger.info("Hernoem NaamOpleiding naar NaamOpleidingCroho")
     result.rename(columns={"NaamOpleiding": "NaamOpleidingCroho"}, inplace=True)
 
     removable_cols = [col for col in result.columns if "_opleiding" in col]
@@ -65,7 +66,7 @@ def _add_naam_opleiding(eencijfer: pd.DataFrame, config: configparser.ConfigPars
         del result[col]
 
     nieuwe_cols = set(result.columns) - set(eencijfer.columns)
-    logger.info(f"De volgende kolommen zijn toegevoegd:")
+    logger.info("De volgende kolommen zijn toegevoegd:")
     logger.info(f"{nieuwe_cols}")
     return result
 
@@ -106,7 +107,7 @@ def _add_lokale_naam_opleiding_faculteit(eencijfer: pd.DataFrame) -> pd.DataFram
         logger.info(f"{opleidingen_zonder_lokale_naam}")
 
     nieuwe_cols = set(result.columns) - set(eencijfer.columns)
-    logger.info(f"De volgende kolommen zijn toegevoegd:")
+    logger.info("De volgende kolommen zijn toegevoegd:")
     logger.info(f"{nieuwe_cols}")
 
     return result
@@ -138,12 +139,12 @@ def _add_type_opleiding(eencijfer: pd.DataFrame) -> pd.DataFrame:
         "T": "tussentijds doctoraal",
         "Q": "post-initiële master",
     }
-    logger.debug(f"...voeg TypeOpleiding toe op basis van Opleidingsfase")
+    logger.debug("...voeg TypeOpleiding toe op basis van Opleidingsfase")
     result["TypeOpleiding"] = result.Opleidingsfase.replace(typeOpleiding)
     result["TypeOpleiding"] = result["TypeOpleiding"].fillna("onbekend")
 
     nieuwe_cols = set(result.columns) - set(eencijfer.columns)
-    logger.info(f"De volgende kolommen zijn toegevoegd:")
+    logger.info("De volgende kolommen zijn toegevoegd:")
     logger.info(f"{nieuwe_cols}")
 
     return result
@@ -192,7 +193,7 @@ def _add_croho_onderdeel(eencijfer: pd.DataFrame) -> pd.DataFrame:
         9: "taal en cultuur",
         0: "sectoroverstijgend",
     }
-    logger.debug(f"...voeg CrohoOnderdeel toe op basis van CrohoOnderdeelActueleOpleiding")
+    logger.debug("...voeg CrohoOnderdeel toe op basis van CrohoOnderdeelActueleOpleiding")
     result["CrohoOnderdeel"] = result.CrohoOnderdeelActueleOpleiding.replace(croho_sectoren).fillna("onbekend")
 
     return result

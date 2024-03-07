@@ -38,9 +38,9 @@ def _get_config(
         if not config.has_option('default', 'import_definitions_dir'):
             config.set('default', 'import_definitions_dir', import_definitions_dir.as_posix())
         if not config.has_option('default', 'use_column_converter'):
-            config.set('default', 'use_column_converter', use_column_converter)
+            config.set('default', 'use_column_converter', str(use_column_converter))
         if not config.has_option('default', 'remove_pii'):
-            config.set('default', 'remove_pii', remove_pii)
+            config.set('default', 'remove_pii', str(remove_pii))
 
     except Exception as e:
         logger.debug(f"{e}")

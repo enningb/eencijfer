@@ -113,9 +113,7 @@ def merge_cohort_inschrijving_jaar2(instroom: pd.DataFrame, inschrijvingen_tweed
     )
 
     if not len(instroom) == len(instroom_uitval_switch):
-        raise Exception(
-            "Bij het samenvoegen van instroom en instroom_uitval_switch gaat er iets mis met mergen. Er ontstaan teveel regels."
-        )
+        raise Exception("Merging gave too much rows.")
 
     return instroom_uitval_switch
 

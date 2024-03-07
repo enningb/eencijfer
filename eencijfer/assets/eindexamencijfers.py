@@ -17,6 +17,8 @@ def _create_eindexamencijfer_df() -> pd.DataFrame:
     result_path = Path(config.get('default', 'result_dir'))
 
     eindexamencijfers_fname = _get_eindexamen_datafile(result_path)
+    if eindexamencijfers_fname is None:
+        raise Exception('No eindexamenfile found!')
     eindexamencijfers = pd.read_parquet(Path(result_path / eindexamencijfers_fname).with_suffix('.parquet'))
     eindexamencijfers = _add_oorspronkelijke_vooropleiding(eindexamencijfers)
     eindexamencijfers = _add_vooropleiding_kort(
@@ -36,11 +38,11 @@ def _create_eindexamencijfer_df() -> pd.DataFrame:
         "CijferDerdeCentraalExamen",
         "CijferSchoolexamen",
     ]
-    logger.debug(f"filter op kolommen:")
-    logger.debug(f"")
+    logger.debug("Filter op kolommen:")
+    logger.debug("")
     logger.debug(f"{fields}")
 
-    logger.debug(f"...melt...")
+    logger.debug("...melt...")
     result = pd.melt(
         eindexamencijfers[fields],
         id_vars=[
@@ -51,7 +53,7 @@ def _create_eindexamencijfer_df() -> pd.DataFrame:
             "VakAfkorting",
         ],
     )
-    logger.debug(f"...lege waarden weghalen...")
+    logger.debug("...lege waarden weghalen...")
     result = result.dropna(subset=["value"])
 
     result["Poging"] = np.where(result.variable.str.contains("Eerste"), 1, np.nan)

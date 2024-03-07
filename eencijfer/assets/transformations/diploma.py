@@ -1,4 +1,5 @@
 """All functions regarding diploma."""
+
 import logging
 
 import numpy as np
@@ -42,7 +43,7 @@ def _add_soort_diploma(eencijfer: pd.DataFrame) -> pd.DataFrame:
     if "OpleidingsfaseActueelVanHetDiploma" not in eencijfer:
         raise Exception("OpleidingsfaseActueelVanHetDiploma mist in eencijfer")
 
-    logger.info(f"Toevoegen SoortDiploma...")
+    logger.info("Toevoegen SoortDiploma...")
     soort_diploma = {
         "D": "propedeuse",
         "A": "associate degree",
@@ -51,7 +52,7 @@ def _add_soort_diploma(eencijfer: pd.DataFrame) -> pd.DataFrame:
         "Q": "post-initiele master",
     }
 
-    logger.debug(f"...voeg SoortDiploma toe op basis van OpleidingsfaseActueelVanHetDiploma")
+    logger.debug("...voeg SoortDiploma toe op basis van OpleidingsfaseActueelVanHetDiploma")
 
     eencijfer["SoortDiploma"] = eencijfer.OpleidingsfaseActueelVanHetDiploma.replace(soort_diploma)
 
