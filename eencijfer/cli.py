@@ -1,5 +1,6 @@
 """Console script for eencijfer."""
 
+from pathlib import Path
 from typing import Optional
 
 import typer
@@ -12,7 +13,7 @@ from eencijfer.assets.eindexamencijfers import _create_eindexamencijfer_df
 from eencijfer.eencijfer import ExportFormat, _convert_to_export_format
 from eencijfer.init import _create_default_config
 from eencijfer.io.file import _save_to_file
-from eencijfer.pii import _replace_all_pgn_with_pseudo_id_remove_pii
+from eencijfer.pii import _replace_all_pgn_with_pseudo_id_remove_pii_local_id
 from eencijfer.qa import compare_eencijfer_files_and_definitions
 from eencijfer.settings import config
 
@@ -20,7 +21,7 @@ app = typer.Typer(name="eencijfer", help="ETL-tool for Dutch eencijfer", no_args
 
 
 def _version_callback(value: bool) -> None:
-    """Generates version nummber.
+    """Gives version nummber.
 
     Args:
         value (bool): boolean of there is a version
@@ -66,13 +67,15 @@ def convert(
     export_format: ExportFormat = ExportFormat.parquet,
     use_column_converters: Annotated[bool, typer.Option("--use-column-converters/--not-use-column-converters", "-c/-C")] = True,
     remove_pii: Annotated[bool, typer.Option("--remove-pii/--do-not-remove-pii", "-p/-P")] = True,
+    add_local_id: Annotated[bool, typer.Option("--add-local-id/--do-not-add-local-id", "-s/-S")] = False,
 ):
-    """Convert eencijfer-files to desired exportformat."""
-    _convert_to_export_format(
-        export_format=export_format.value, use_column_converters=use_column_converters, remove_pii=remove_pii
+    """Convert eencijfer-files to desired exportformat, with or without PII."""
+
+    _convert_to_export_format(export_format=export_format.value, use_column_converters=use_column_converters)
+
+    _replace_all_pgn_with_pseudo_id_remove_pii_local_id(
+        export_format=export_format, remove_pii=remove_pii, add_local_id=add_local_id
     )
-    if remove_pii:
-        _replace_all_pgn_with_pseudo_id_remove_pii(export_format=export_format)
 
 
 @app.command()
@@ -80,6 +83,7 @@ def qa():
     """Show overlap between eencijfer-files and definitions."""
     overlap = compare_eencijfer_files_and_definitions()
     typer.echo(overlap)
+    typer.echo(Path().absolute())
 
 
 @app.command()
