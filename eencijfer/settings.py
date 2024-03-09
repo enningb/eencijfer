@@ -4,13 +4,15 @@ import configparser
 import logging
 from pathlib import Path
 
-from eencijfer import CONFIG_FILE, PACKAGE_PROVIDED_IMPORT_DEFINTIONS_DIR, __app_name__
+from eencijfer import CONFIG_FILE, PACKAGE_PROVIDED_IMPORT_DEFINTIONS_DIR
 
 logger = logging.getLogger(__name__)
 
-default_assets_dir = Path.home() / __app_name__ / "assets"
-default_result_dir = Path.home() / __app_name__ / "result"
-default_source_dir = Path.home() / __app_name__ / "eencijfer"
+default_source_dir = Path().absolute()
+default_assets_dir = default_source_dir / "assets"
+default_result_dir = default_source_dir / "result"
+# default_source_dir = Path.home() / __app_name__ / "eencijfer"
+
 default_import_definitions_dir = PACKAGE_PROVIDED_IMPORT_DEFINTIONS_DIR
 
 
@@ -23,7 +25,7 @@ def _get_config(
     use_column_converter: bool = False,
     remove_pii: bool = True,
 ) -> configparser.ConfigParser:
-    config = configparser.ConfigParser(converters={"path": lambda x: Path(x)})
+    config = configparser.ConfigParser(converters={"path": lambda x: Path(x), "list": lambda x: x.split(',')})
 
     try:
         config.read(CONFIG_FILE)
