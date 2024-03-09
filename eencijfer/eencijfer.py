@@ -267,7 +267,6 @@ def _convert_to_export_format(
     config: configparser.ConfigParser = config,
     export_format: str = 'parquet',
     use_column_converters: bool = False,
-    remove_pii: bool = True,
 ) -> None:
     """Saves data to the export format.
 
