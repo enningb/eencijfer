@@ -7,6 +7,7 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
+from eencijfer.assets.transformations.local_data import _add_local_id
 from eencijfer.init import _get_eencijfer_datafile, _get_eindexamen_datafile
 from eencijfer.io.file import _save_to_file
 from eencijfer.settings import config
@@ -90,7 +91,7 @@ def _replace_pgn_with_pseudo_id(
 
     logger.debug("Rename new identifier to old identifier.")
     result = result.rename(columns={new_identifier: identifier})
-
+    logger.info('Replaced PersoonsgebondenNummer with a pseudo-id.')
     return result
 
 
@@ -121,8 +122,13 @@ def _empty_id_fields(
     return data
 
 
-def _replace_all_pgn_with_pseudo_id_remove_pii(config: configparser.ConfigParser = config, export_format='parquet') -> None:
-    """Replaces id's with pseudo-id's and removes PII.
+def _replace_all_pgn_with_pseudo_id_remove_pii_local_id(
+    config: configparser.ConfigParser = config,
+    export_format='parquet',
+    remove_pii: bool = True,
+    add_local_id: bool = False,
+) -> None:
+    """Replaces id's with pseudo-id's, removes PII, adds local-'s.
 
     Args:
         config (configparser.ConfigParser, optional): _description_. Defaults to config.
@@ -147,15 +153,27 @@ def _replace_all_pgn_with_pseudo_id_remove_pii(config: configparser.ConfigParser
     vakken_fpath = Path(result_dir / vakken_fname).with_suffix(f'.{export_format}')
     vakken = pd.read_parquet(vakken_fpath)
 
-    logger.info('Creating table with pseudo-ids...')
-    koppeltabel = _create_pgn_pseudo_id_table(eencijfer)
-    logger.info(f'...removing pgn from {eencijfer_fpath}')
-    eencijfer_no_pii = _replace_pgn_with_pseudo_id(eencijfer, koppeltabel)
-    eencijfer_no_pii = _empty_id_fields(eencijfer_no_pii)
-    _save_to_file(eencijfer_no_pii, fname=eencijfer_fname, dir=result_dir, export_format=export_format)
+    if add_local_id:
+        logger.info('Adding local_id to eencijfer and vakken.')
+        eencijfer = _add_local_id(eencijfer)
+        vakken = _add_local_id(vakken)
 
-    logger.info(f'...removing pgn from {vakken_fpath}')
-    vakken_no_pii = _replace_pgn_with_pseudo_id(vakken, koppeltabel)
-    vakken_no_pii = _empty_id_fields(vakken_no_pii)
-    _save_to_file(vakken_no_pii, fname=vakken_fname, dir=result_dir, export_format=export_format)
+    if remove_pii:
+        if add_local_id:
+            logger.warning('Not removing local_id! Data still contains PII.')
+        logger.info('Creating table with pseudo-ids...')
+        koppeltabel = _create_pgn_pseudo_id_table(eencijfer)
+        logger.info(f'...removing pgn from {eencijfer_fpath}')
+        eencijfer = _replace_pgn_with_pseudo_id(eencijfer, koppeltabel)
+        eencijfer = _empty_id_fields(eencijfer)
+
+        logger.info(f'...removing pgn from {vakken_fpath}')
+        vakken = _replace_pgn_with_pseudo_id(vakken, koppeltabel)
+        vakken = _empty_id_fields(vakken)
+
+    logger.info(f"Saving {eencijfer_fname} to {result_dir}")
+    _save_to_file(eencijfer, fname=eencijfer_fname, dir=result_dir, export_format=export_format)
+
+    logger.info(f"Saving {vakken_fname} to {result_dir}")
+    _save_to_file(vakken, fname=vakken_fname, dir=result_dir, export_format=export_format)
     return None
