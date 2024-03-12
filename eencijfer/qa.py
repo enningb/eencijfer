@@ -1,11 +1,26 @@
 """Convenience functions for quality assurance."""
 
 import configparser
+from pathlib import Path
+from typing import Optional
 
 import pandas as pd
 
 from eencijfer.eencijfer import _get_list_of_eencijfer_files_in_dir, _match_file_to_definition
 from eencijfer.settings import config
+
+
+def _get_definition(row: pd.Series, col_name: str = 'path') -> Optional[Path]:
+    """Gives definition-file for path (if it exists, otherwise None).
+
+    Args:
+        row (pd.Series): A series with field 'path'.
+
+    Returns:
+        Optional[Path]: _description_
+    """
+    definition = _match_file_to_definition(row[col_name])
+    return definition
 
 
 def compare_eencijfer_files_and_definitions(config: configparser.ConfigParser = config) -> pd.DataFrame:
@@ -22,7 +37,7 @@ def compare_eencijfer_files_and_definitions(config: configparser.ConfigParser = 
         eencijfer_files: list = [f.stem for f in eencijfer_fpaths]
     eencijfer_df: pd.DataFrame = pd.DataFrame({'eencijfer_file': eencijfer_files, 'path': eencijfer_fpaths})
 
-    eencijfer_df['definition'] = eencijfer_df['path'].apply(_match_file_to_definition)
+    eencijfer_df['definition'] = eencijfer_df.apply(_get_definition, axis=1)
 
     definition_dir = config.getpath('default', 'import_definitions_dir')
     definition_fpaths = [p for p in definition_dir.iterdir() if p.suffix in [".csv"]]
