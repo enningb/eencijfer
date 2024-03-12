@@ -10,12 +10,12 @@ from eencijfer import APP_NAME, CONFIG_FILE, __version__
 from eencijfer.assets.cohorten import create_cohorten_met_indicatoren
 from eencijfer.assets.eencijfer import _create_eencijfer_df
 from eencijfer.assets.eindexamencijfers import _create_eindexamencijfer_df
-from eencijfer.eencijfer import ExportFormat, _convert_to_export_format
-from eencijfer.init import _create_default_config
-from eencijfer.io.file import _save_to_file
-from eencijfer.pii import _replace_all_pgn_with_pseudo_id_remove_pii_local_id
-from eencijfer.qa import compare_eencijfer_files_and_definitions
+from eencijfer.convert.eencijfer import _convert_to_export_format
+from eencijfer.convert.pii import _replace_all_pgn_with_pseudo_id_remove_pii_local_id
+from eencijfer.io.file import ExportFormat, _save_to_file
 from eencijfer.settings import config
+from eencijfer.utils.init import _create_default_config
+from eencijfer.utils.qa import compare_eencijfer_files_and_definitions
 
 app = typer.Typer(name="eencijfer", help="ETL-tool for Dutch eencijfer", no_args_is_help=True)
 

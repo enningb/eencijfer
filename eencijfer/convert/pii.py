@@ -7,10 +7,10 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-from eencijfer.assets.transformations.local_data import _add_local_id
-from eencijfer.init import _get_eencijfer_datafile, _get_eindexamen_datafile
 from eencijfer.io.file import _save_to_file
 from eencijfer.settings import config
+from eencijfer.utils.detect_eencijfer_files import _get_eencijfer_datafile, _get_eindexamen_datafile
+from eencijfer.utils.local_data import _add_local_id
 
 logger = logging.getLogger(__name__)
 

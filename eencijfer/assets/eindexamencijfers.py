@@ -7,8 +7,8 @@ import numpy as np
 import pandas as pd
 
 from eencijfer.assets.transformations.vooropleiding import _add_oorspronkelijke_vooropleiding, _add_vooropleiding_kort
-from eencijfer.init import _get_eindexamen_datafile
 from eencijfer.settings import config
+from eencijfer.utils.detect_eencijfer_files import _get_eindexamen_datafile
 
 logger = logging.getLogger(__name__)
 

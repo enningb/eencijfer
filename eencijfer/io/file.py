@@ -1,11 +1,25 @@
 """Tools to save to files."""
 
 import logging
+from enum import Enum
 from pathlib import Path
 
 import pandas as pd
 
 logger = logging.getLogger(__name__)
+
+
+class ExportFormat(str, Enum):
+    """File format that will be used to convert to.
+
+    Args:
+        str (_type_): _description_
+        Enum (_type_): _description_
+    """
+
+    csv = "csv"
+    parquet = "parquet"
+    db = "db"
 
 
 def _save_to_file(

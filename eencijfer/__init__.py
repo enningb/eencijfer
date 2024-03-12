@@ -28,7 +28,7 @@ CONFIG_FILE = APP_DIR / "config.INI"
 
 # # Source path with all definition files
 here = Path(__file__).parent.absolute()
-PACKAGE_PROVIDED_IMPORT_DEFINTIONS_DIR = here / "import_definitions"
+PACKAGE_PROVIDED_IMPORT_DEFINTIONS_DIR = here / "convert" / "import_definitions"
 
 # try:
 #     shutil.copytree(PACKAGE_PROVIDED_IMPORT_DEFINTIONS_DIR, DEFAULT_IMPORT_DEFINITIONS_DIR)
@@ -57,7 +57,7 @@ def column_converter(func):
 
 
 # import module so all column-converter-decorators are activated
-import_module("eencijfer.column_converters")
+import_module("eencijfer.convert.column_converters")
 
 
 FORMAT = "[%(filename)s:%(lineno)s - %(funcName)20s() ] %(message)s"

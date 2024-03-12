@@ -6,7 +6,7 @@ from typing import Optional
 
 import pandas as pd
 
-from eencijfer.eencijfer import _get_list_of_eencijfer_files_in_dir, _match_file_to_definition
+from eencijfer.convert.eencijfer import _get_list_of_eencijfer_files_in_dir, _match_file_to_definition
 from eencijfer.settings import config
 
 

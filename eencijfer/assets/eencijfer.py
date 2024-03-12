@@ -15,8 +15,8 @@ from eencijfer.assets.transformations.opleiding import (
 )
 from eencijfer.assets.transformations.prestatieafspraken import _add_pa_cohort
 from eencijfer.assets.transformations.vooropleiding import _add_naam_instelling_vooropleiding, _add_vooropleiding
-from eencijfer.init import _get_eencijfer_datafile
 from eencijfer.settings import config
+from eencijfer.utils.detect_eencijfer_files import _get_eencijfer_datafile
 
 logger = logging.getLogger(__name__)
 

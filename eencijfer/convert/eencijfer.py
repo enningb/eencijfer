@@ -1,32 +1,17 @@
 """Main eencijfer module."""
 
-import configparser
 import logging
-from enum import Enum
 from pathlib import Path
 from typing import Optional
 
 import pandas as pd
-import typer
 
 from eencijfer import CONVERTERS
 from eencijfer.io.file import _save_to_file
 from eencijfer.settings import config
+from eencijfer.utils.detect_eencijfer_files import _get_list_of_eencijfer_files_in_dir
 
 logger = logging.getLogger(__name__)
-
-
-class ExportFormat(str, Enum):
-    """File format that will be used to convert to.
-
-    Args:
-        str (_type_): _description_
-        Enum (_type_): _description_
-    """
-
-    csv = "csv"
-    parquet = "parquet"
-    db = "db"
 
 
 def _match_file_to_definition(fpath: Path) -> Optional[Path]:
@@ -74,37 +59,6 @@ def _match_file_to_definition(fpath: Path) -> Optional[Path]:
 
     logger.debug(f"Definition-file for {fpath.stem} is set to: {matching_definition_file}")
     return matching_definition_file
-
-
-def _get_list_of_eencijfer_files_in_dir(config: configparser.ConfigParser = config) -> Optional[list]:
-    """Gets list of eencijfer-files that are in eencijfer_dir.
-
-    Get a list of eencijfer-files in the given source_dir (in config-file). Gives a list
-    of files that match the names of the files in the definition-dir.
-
-    Args:
-        config (configparser.ConfigParser, optional): _description_. Defaults to config.
-
-    Returns:
-        Optional[list]: List of files that are recognized as eencijfer-files.
-    """
-    source_dir = config.getpath('default', 'source_dir')
-    files = None
-    try:
-        logger.debug("Getting list of files ending with '.asc'...")
-        asc_files = [p for p in source_dir.iterdir() if p.suffix.lower() == '.asc']
-        logger.debug("...looking for file starting with 'EV'...")
-        files = asc_files + [p for p in source_dir.iterdir() if p.stem.startswith('EV')]
-        if len(files) == 0:
-            typer.echo(f"No files found that in {source_dir} that could be eencijfer-files. Aborting...")
-            raise typer.Exit()
-        else:
-            typer.echo(f"Found {len(files)} files in `{source_dir}` that might be eencijfer-files.")
-    except FileNotFoundError:
-        typer.echo(f'No files found. Does the directory `{source_dir}` exist?')
-        raise typer.Exit()
-
-    return files
 
 
 def _create_dict_matching_eencijfer_and_definition_files() -> dict:
@@ -264,7 +218,6 @@ def read_asc(fpath: Path, definition_file: Path, use_column_converters: bool = F
 
 
 def _convert_to_export_format(
-    config: configparser.ConfigParser = config,
     export_format: str = 'parquet',
     use_column_converters: bool = False,
 ) -> None:
