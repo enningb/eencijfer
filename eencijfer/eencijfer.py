@@ -29,7 +29,7 @@ class ExportFormat(str, Enum):
     db = "db"
 
 
-def _match_file_to_definition(fpath: Path, config: configparser.ConfigParser = config) -> Optional[Path]:
+def _match_file_to_definition(fpath: Path) -> Optional[Path]:
     """Matches import-definitions to .asc-files in eencijfer-directory.
 
     Args:

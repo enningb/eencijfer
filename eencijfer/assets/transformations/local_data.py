@@ -30,7 +30,7 @@ def _add_local_id(data: pd.DataFrame) -> pd.DataFrame:
     logger.info(f'... merging {left_on} with {right_on} for local_ids.')
 
     local_ids = pd.read_parquet(fpath)
-    result = pd.merge(data, local_ids, left_on=left_on, right_on=right_on, how=how)
+    result = pd.merge(data, local_ids, left_on=left_on, right_on=right_on, how='left')
     if (how == 'left') and (len(data) != len(result)):
         raise Exception('Merge went wrong!')
 

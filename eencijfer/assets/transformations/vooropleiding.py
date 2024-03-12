@@ -1,6 +1,5 @@
 """Vooropleiding and InstellingVooropleiding."""
 
-import configparser
 import logging
 
 import pandas as pd
@@ -8,6 +7,7 @@ import pandas as pd
 from eencijfer.settings import config
 
 logger = logging.getLogger(__name__)
+
 # In het eencijfer zitten 3 velden die betrekking hebben op de vooropleiding:
 # het gaat om:
 # 1. HoogsteVooropleiding: hoogste vooropleiding
@@ -124,7 +124,6 @@ def _add_profiel_havo_vwo(Dec_vopl: pd.DataFrame) -> pd.DataFrame:
 
 def _add_vooropleiding(
     eencijfer: pd.DataFrame,
-    config: configparser.ConfigParser = config,
     vooropleiding_field: str = "HoogsteVooropleiding",
 ) -> pd.DataFrame:
     """Voegt gegevens over vooropleiding toe.
@@ -192,9 +191,7 @@ def _add_oorspronkelijke_vooropleiding(data: pd.DataFrame) -> pd.DataFrame:
     return result
 
 
-def _add_naam_instelling_vooropleiding(
-    eencijfer: pd.DataFrame, config: configparser.ConfigParser = config, vooropleiding: str = 'HoogsteVooroplVoorHetHo'
-) -> pd.DataFrame:
+def _add_naam_instelling_vooropleiding(eencijfer: pd.DataFrame, vooropleiding: str = 'HoogsteVooroplVoorHetHo') -> pd.DataFrame:
     """Add name of institution that provided vooropleiding.
 
     Args:
