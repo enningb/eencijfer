@@ -11,8 +11,6 @@ logger = logging.getLogger(__name__)
 default_source_dir = Path().absolute()
 default_assets_dir = default_source_dir / "assets"
 default_result_dir = default_source_dir / "result"
-# default_source_dir = Path.home() / __app_name__ / "eencijfer"
-
 default_import_definitions_dir = PACKAGE_PROVIDED_IMPORT_DEFINTIONS_DIR
 
 
@@ -28,7 +26,8 @@ def _get_config(
     config = configparser.ConfigParser(converters={"path": lambda x: Path(x), "list": lambda x: x.split(',')})
 
     try:
-        config.read(CONFIG_FILE)
+        if CONFIG_FILE.is_file():
+            config.read(CONFIG_FILE)
         if not config.has_section('default'):
             config.add_section('default')
         if not config.has_option('default', 'source_dir'):
