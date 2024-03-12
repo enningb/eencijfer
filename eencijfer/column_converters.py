@@ -1,4 +1,5 @@
 """Converters for columns on read-time."""
+
 import numpy as np
 import pandas as pd
 
@@ -6,7 +7,7 @@ from eencijfer import column_converter
 
 
 @column_converter
-def convert_to_object(x: pd.Series) -> pd.Series:
+def convert_to_object(x) -> str:
     """Convert column to string.
 
     Args:
