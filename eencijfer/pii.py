@@ -6,7 +6,6 @@ from pathlib import Path
 
 import numpy as np
 import pandas as pd
-from numpy.typing import NDArray
 
 from eencijfer.assets.transformations.local_data import _add_local_id
 from eencijfer.init import _get_eencijfer_datafile, _get_eindexamen_datafile
@@ -47,7 +46,7 @@ def _create_pgn_pseudo_id_table(
     if not len(koppeltabel) == data[identifier].nunique():
         raise Exception("Creating table failed...")
     logger.debug("Create identifier by creating  random numbers and fill with 0 until 7 positions.")
-    identifier_array: NDArray = NDArray(koppeltabel[identifier].tolist())
+    identifier_array = koppeltabel[identifier].tolist()
     koppeltabel[new_identifier] = np.random.permutation(identifier_array)
     koppeltabel[new_identifier] = koppeltabel[new_identifier].astype(str)
     koppeltabel[new_identifier] = koppeltabel[new_identifier].str.zfill(7)
