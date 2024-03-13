@@ -75,7 +75,10 @@ def convert(
     if not result_dir.is_dir():
         Path(result_dir).mkdir(parents=True, exist_ok=True)
 
-    _convert_to_export_format(export_format=export_format.value, use_column_converters=use_column_converters)
+    source_dir = config.getpath('default', 'source_dir')
+    _convert_to_export_format(
+        source_dir=source_dir, export_format=export_format.value, use_column_converters=use_column_converters
+    )
 
     _replace_all_pgn_with_pseudo_id_remove_pii_local_id(
         export_format=export_format, remove_pii=remove_pii, add_local_id=add_local_id
