@@ -9,15 +9,15 @@ from eencijfer import CONFIG_FILE, PACKAGE_PROVIDED_IMPORT_DEFINTIONS_DIR
 logger = logging.getLogger(__name__)
 
 default_source_dir = Path().absolute()
-default_assets_dir = default_source_dir / "assets"
-default_result_dir = default_source_dir / "result"
+default_assets_dir = Path().absolute() / "assets"
+default_result_dir = Path().absolute() / "result"
 default_import_definitions_dir = PACKAGE_PROVIDED_IMPORT_DEFINTIONS_DIR
 
 
 def _get_config(
     CONFIG_FILE: Path,
-    result_dir: Path = default_result_dir,
     source_dir: Path = default_source_dir,
+    result_dir: Path = default_result_dir,
     assets_dir: Path = default_assets_dir,
     import_definitions_dir: Path = default_import_definitions_dir,
     use_column_converter: bool = False,
