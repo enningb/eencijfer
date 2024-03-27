@@ -32,7 +32,10 @@ def compare_eencijfer_files_and_definitions(config: configparser.ConfigParser = 
     Returns:
         pd.DataFrame: prints out df.
     """
-    eencijfer_fpaths = _get_list_of_eencijfer_files_in_dir()
+
+    source_dir = config.get_path('default', 'source_dir')
+
+    eencijfer_fpaths = _get_list_of_eencijfer_files_in_dir(source_dir=source_dir)
     if eencijfer_fpaths is not None:
         eencijfer_files: list = [f.stem for f in eencijfer_fpaths]
     eencijfer_df: pd.DataFrame = pd.DataFrame({'eencijfer_file': eencijfer_files, 'path': eencijfer_fpaths})

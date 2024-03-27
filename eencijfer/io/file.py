@@ -19,14 +19,13 @@ class ExportFormat(str, Enum):
 
     csv = "csv"
     parquet = "parquet"
-    db = "db"
 
 
 def _save_to_file(
     df: pd.DataFrame,
     dir: Path,
     fname: str,
-    export_format: str = 'parquet',
+    export_format: ExportFormat = ExportFormat.parquet,
 ):
     """Saves data in the export_format in the result-directory specified in the config.
 
@@ -42,12 +41,12 @@ def _save_to_file(
 
     fpath = Path(dir / fname)
 
-    if export_format == 'csv':
+    if export_format.value == 'csv':
         target_fpath = Path(fpath).with_suffix('.csv')
         logger.info(f"Saving {fname} to {target_fpath}...")
         df.to_csv(target_fpath, sep=",")
 
-    if export_format == 'parquet':
+    if export_format.value == 'parquet':
         target_fpath = Path(fpath).with_suffix('.parquet')
         logger.info(f"Saving {fname} to {target_fpath}...")
         df.to_parquet(target_fpath)

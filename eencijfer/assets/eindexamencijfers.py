@@ -7,19 +7,28 @@ import numpy as np
 import pandas as pd
 
 from eencijfer.assets.transformations.vooropleiding import _add_oorspronkelijke_vooropleiding, _add_vooropleiding_kort
-from eencijfer.settings import config
 from eencijfer.utils.detect_eencijfer_files import _get_eindexamen_datafile
 
 logger = logging.getLogger(__name__)
 
 
-def _create_eindexamencijfer_df() -> pd.DataFrame:
-    result_path = config.getpath('default', 'result_dir')
+def _create_eindexamencijfer_df(source_dir: Path) -> pd.DataFrame:
+    """Create table with eindexamencijfers.
 
-    eindexamencijfers_fname = _get_eindexamen_datafile(result_path)
+    Args:
+        source_dir (Path): Path to directory with converted eencijfer-files.
+
+    Raises:
+        Exception: _description_
+
+    Returns:
+        pd.DataFrame: dataframe with eindexamencijfers.
+    """
+
+    eindexamencijfers_fname = _get_eindexamen_datafile(source_dir)
     if eindexamencijfers_fname is None:
         raise Exception('No eindexamenfile found!')
-    eindexamencijfers = pd.read_parquet(Path(result_path / eindexamencijfers_fname).with_suffix('.parquet'))
+    eindexamencijfers = pd.read_parquet(Path(source_dir / eindexamencijfers_fname).with_suffix('.parquet'))
     eindexamencijfers = _add_oorspronkelijke_vooropleiding(eindexamencijfers)
     eindexamencijfers = _add_vooropleiding_kort(
         eindexamencijfers,

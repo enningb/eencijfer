@@ -7,14 +7,15 @@ from typing import Optional
 import pandas as pd
 
 from eencijfer import CONVERTERS
-from eencijfer.io.file import _save_to_file
-from eencijfer.settings import config
-from eencijfer.utils.detect_eencijfer_files import _get_list_of_eencijfer_files_in_dir
+from eencijfer.io.file import ExportFormat, _save_to_file
+from eencijfer.utils.detect_eencijfer_files import _get_list_of_definition_files, _get_list_of_eencijfer_files_in_dir
 
 logger = logging.getLogger(__name__)
 
+definition_files = _get_list_of_definition_files()
 
-def _match_file_to_definition(fpath: Path) -> Optional[Path]:
+
+def _match_file_to_definition(fpath: Path, definition_files: list = definition_files) -> Optional[Path]:
     """Matches import-definitions to .asc-files in eencijfer-directory.
 
     Args:
@@ -24,19 +25,11 @@ def _match_file_to_definition(fpath: Path) -> Optional[Path]:
     Returns:
         Optional[Path]: Path to definition file.
     """
-    definition_dir = config.getpath('default', 'import_definitions_dir')
-    logger.debug(f"maak lijst met bestanden in {definition_dir}")
-    definition_files = [p for p in definition_dir.iterdir() if p.suffix in [".csv"]]
-    logger.debug(f"...{len(definition_files)} bestanden gevonden in {definition_dir}")
-
-    # check for duplicate definion files.
-    if len(set(definition_files)) != len(definition_files):
-        raise Exception('Duplicate definition files found.')
 
     matching_definition_file = None
 
     try:
-        matching_definition_file = [d for d in definition_files if fpath.stem == d.stem][0]
+        matching_definition_file = [d for d in definition_files if fpath.stem.lower() == d.stem.lower()][0]
     except TypeError:
         logger.debug(f"No definition file found for {fpath.stem} yet...")
     except IndexError:
@@ -61,13 +54,13 @@ def _match_file_to_definition(fpath: Path) -> Optional[Path]:
     return matching_definition_file
 
 
-def _create_dict_matching_eencijfer_and_definition_files() -> dict:
+def _create_dict_matching_eencijfer_and_definition_files(source_dir: Path) -> dict:
     """Creates dictionary with matching eencijfer and definition-files.
 
     Returns:
         dict: Dictionary with eencijfer-definition-file pairs.
     """
-    eencijfer_files = _get_list_of_eencijfer_files_in_dir()
+    eencijfer_files = _get_list_of_eencijfer_files_in_dir(source_dir)
     result_dict = {}
     if eencijfer_files is None:
         raise Exception('No files found!')
@@ -218,7 +211,9 @@ def read_asc(fpath: Path, definition_file: Path, use_column_converters: bool = F
 
 
 def _convert_to_export_format(
-    export_format: str = 'parquet',
+    source_dir: Path,
+    result_dir: Path,
+    export_format: ExportFormat = ExportFormat.parquet,
     use_column_converters: bool = False,
 ) -> None:
     """Saves data to the export format.
@@ -237,11 +232,10 @@ def _convert_to_export_format(
         None: This function does not return a value.
     """
     # get dict with files and definitions:
-    eencijfer_definition_pairs = _create_dict_matching_eencijfer_and_definition_files()
-    result_dir = config.getpath('default', 'result_dir')
+    eencijfer_definition_pairs = _create_dict_matching_eencijfer_and_definition_files(source_dir)
 
     for file, definition_file in eencijfer_definition_pairs.items():
-        target_fpath = Path(result_dir / file.name).with_suffix(f".{export_format}")
+        target_fpath = Path(result_dir / file.name).with_suffix(f".{export_format.value}")
 
         logger.info("**************************************")
         logger.info("**************************************")

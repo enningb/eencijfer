@@ -7,7 +7,7 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-from eencijfer.io.file import _save_to_file
+from eencijfer.io.file import ExportFormat, _save_to_file
 from eencijfer.settings import config
 from eencijfer.utils.detect_eencijfer_files import _get_eencijfer_datafile, _get_eindexamen_datafile
 from eencijfer.utils.local_data import _add_local_id
@@ -125,7 +125,7 @@ def _empty_id_fields(
 
 def _replace_all_pgn_with_pseudo_id_remove_pii_local_id(
     config: configparser.ConfigParser = config,
-    export_format='parquet',
+    export_format=ExportFormat.parquet,
     remove_pii: bool = True,
     add_local_id: bool = False,
 ) -> None:
@@ -138,20 +138,21 @@ def _replace_all_pgn_with_pseudo_id_remove_pii_local_id(
     Returns:
         None: Saves files to result_dir.
     """
+
     logger.debug('Replacing pgns and removing pii.')
     result_dir = config.getpath('default', 'result_dir')
 
     eencijfer_fname = _get_eencijfer_datafile(result_dir)
     if eencijfer_fname is None:
         raise Exception("No eencijfer-file found.")
-    eencijfer_fpath = Path(result_dir / eencijfer_fname).with_suffix(f'.{export_format}')
+    eencijfer_fpath = Path(result_dir / eencijfer_fname).with_suffix(f'.{export_format.value}')
     eencijfer = pd.read_parquet(eencijfer_fpath)
 
     vakken_fname = _get_eindexamen_datafile(result_dir)
     if vakken_fname is None:
         raise Exception("No eindexamen-file found.")
 
-    vakken_fpath = Path(result_dir / vakken_fname).with_suffix(f'.{export_format}')
+    vakken_fpath = Path(result_dir / vakken_fname).with_suffix(f'.{export_format.value}')
     vakken = pd.read_parquet(vakken_fpath)
 
     if add_local_id:
