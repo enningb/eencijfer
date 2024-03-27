@@ -80,7 +80,7 @@ def convert(
     _convert_to_export_format(
         source_dir=source_dir,
         result_dir=result_dir,
-        export_format=export_format.value,
+        export_format=export_format,
         use_column_converters=use_column_converters,
     )
 

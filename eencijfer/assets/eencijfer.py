@@ -25,7 +25,11 @@ def _create_eencijfer_df(source_dir: Path):
     """Pipeline voor verrijken van eencijfer-basisbestand."""
 
     eencijfer_fname = _get_eencijfer_datafile(source_dir)
-    eencijfer = pd.read_parquet(Path(source_dir / eencijfer_fname).with_suffix('.parquet'))
+    if eencijfer_fname:
+        eencijfer = pd.read_parquet(Path(source_dir / eencijfer_fname).with_suffix('.parquet'))
+
+    if not isinstance(eencijfer, pd.DataFrame):
+        raise Exception(f'No data found {eencijfer_fname}')
 
     eencijfer["Aantal"] = 1
 

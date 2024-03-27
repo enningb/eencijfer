@@ -52,7 +52,7 @@ def _create_default_config(CONFIG_FILE: Path) -> None:
 
     config.set('default', 'source_dir', source_dir.as_posix())
 
-    eencijfer_files = _get_list_of_eencijfer_files_in_dir()
+    eencijfer_files = _get_list_of_eencijfer_files_in_dir(source_dir=source_dir)
 
     if not eencijfer_files:
         typer.echo(f"No eencijfer-files found at {source_dir}. Move them or...")
