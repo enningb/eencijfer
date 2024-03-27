@@ -107,13 +107,13 @@ def create_assets(export_format: ExportFormat = ExportFormat.parquet):
         Path(assets_dir).mkdir(parents=True, exist_ok=True)
 
     eencijfer = _create_eencijfer_df(source_dir=source_dir)
-    _save_to_file(eencijfer, dir=assets_dir, fname='eencijfer', export_format='parquet')
+    _save_to_file(eencijfer, dir=assets_dir, fname='eencijfer', export_format=export_format)
     cohorten = create_cohorten_met_indicatoren(source_dir=source_dir)
-    _save_to_file(cohorten, dir=assets_dir, fname='cohorten', export_format='parquet')
+    _save_to_file(cohorten, dir=assets_dir, fname='cohorten', export_format=export_format)
     eindexamencijfers = _create_eindexamencijfer_df(source_dir=source_dir)
     _save_to_file(
         eindexamencijfers,
         dir=assets_dir,
         fname='eindexamencijfers',
-        export_format='parquet',
+        export_format=export_format,
     )
