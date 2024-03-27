@@ -71,13 +71,17 @@ def convert(
 ):
     """Convert eencijfer-files to desired exportformat, with or without PII."""
 
+    source_dir = config.getpath('default', 'source_dir')
+
     result_dir = config.getpath('default', 'result_dir')
     if not result_dir.is_dir():
         Path(result_dir).mkdir(parents=True, exist_ok=True)
 
-    source_dir = config.getpath('default', 'source_dir')
     _convert_to_export_format(
-        source_dir=source_dir, export_format=export_format.value, use_column_converters=use_column_converters
+        source_dir=source_dir,
+        result_dir=result_dir,
+        export_format=export_format.value,
+        use_column_converters=use_column_converters,
     )
 
     _replace_all_pgn_with_pseudo_id_remove_pii_local_id(
@@ -95,14 +99,18 @@ def qa():
 
 @app.command()
 def create_assets(export_format: ExportFormat = ExportFormat.parquet):
-    """Create data-assets and save them to assests-directory."""
-    assets_dir = config.getpath('default', 'assets_dir')
+    """Create data-assets and save them to assets-directory."""
+    source_dir = config.getpath('default', 'source_dir')
 
-    eencijfer = _create_eencijfer_df()
+    assets_dir = config.getpath('default', 'assets_dir')
+    if not assets_dir.is_dir():
+        Path(assets_dir).mkdir(parents=True, exist_ok=True)
+
+    eencijfer = _create_eencijfer_df(source_dir=source_dir)
     _save_to_file(eencijfer, dir=assets_dir, fname='eencijfer', export_format='parquet')
-    cohorten = create_cohorten_met_indicatoren()
+    cohorten = create_cohorten_met_indicatoren(source_dir=source_dir)
     _save_to_file(cohorten, dir=assets_dir, fname='cohorten', export_format='parquet')
-    eindexamencijfers = _create_eindexamencijfer_df()
+    eindexamencijfers = _create_eindexamencijfer_df(source_dir=source_dir)
     _save_to_file(
         eindexamencijfers,
         dir=assets_dir,
