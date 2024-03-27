@@ -8,6 +8,7 @@ import pandas as pd
 from eencijfer.assets.transformations.diploma import _add_ho_diploma_eerstejaar, _add_soort_diploma
 from eencijfer.assets.transformations.opleiding import (
     _add_croho_onderdeel,
+    _add_isced,
     _add_lokale_naam_opleiding_faculteit,
     _add_naam_opleiding,
     _add_opleiding,
@@ -15,19 +16,16 @@ from eencijfer.assets.transformations.opleiding import (
 )
 from eencijfer.assets.transformations.prestatieafspraken import _add_pa_cohort
 from eencijfer.assets.transformations.vooropleiding import _add_naam_instelling_vooropleiding, _add_vooropleiding
-from eencijfer.settings import config
 from eencijfer.utils.detect_eencijfer_files import _get_eencijfer_datafile
 
 logger = logging.getLogger(__name__)
 
 
-def _create_eencijfer_df():
+def _create_eencijfer_df(source_dir: Path):
     """Pipeline voor verrijken van eencijfer-basisbestand."""
 
-    result_path = config.getpath('default', 'result_dir')
-
-    eencijfer_fname = _get_eencijfer_datafile(result_path)
-    eencijfer = pd.read_parquet(Path(result_path / eencijfer_fname).with_suffix('.parquet'))
+    eencijfer_fname = _get_eencijfer_datafile(source_dir)
+    eencijfer = pd.read_parquet(Path(source_dir / eencijfer_fname).with_suffix('.parquet'))
 
     eencijfer["Aantal"] = 1
 
@@ -47,5 +45,6 @@ def _create_eencijfer_df():
     eencijfer = _add_type_opleiding(eencijfer)
     eencijfer = _add_lokale_naam_opleiding_faculteit(eencijfer)
     eencijfer = _add_pa_cohort(eencijfer)
+    eencijfer = _add_isced(eencijfer)
 
     return eencijfer
