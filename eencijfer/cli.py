@@ -10,9 +10,9 @@ from eencijfer import APP_NAME, CONFIG_FILE, __version__
 from eencijfer.assets.cohorten import create_cohorten_met_indicatoren
 from eencijfer.assets.eencijfer import _create_eencijfer_df
 from eencijfer.assets.eindexamencijfers import _create_eindexamencijfer_df
-from eencijfer.convert.eencijfer import _convert_to_export_format
+from eencijfer.convert.eencijfer import _convert_to_parquet
 from eencijfer.convert.pii import _replace_all_pgn_with_pseudo_id_remove_pii_local_id
-from eencijfer.io.file import ExportFormat, _save_to_file
+from eencijfer.io.file import ExportFormat, _convert_to_export_format, _save_to_file
 from eencijfer.settings import config
 from eencijfer.utils.init import _create_default_config
 from eencijfer.utils.qa import compare_eencijfer_files_and_definitions
@@ -77,16 +77,18 @@ def convert(
     if not result_dir.is_dir():
         Path(result_dir).mkdir(parents=True, exist_ok=True)
 
-    _convert_to_export_format(
+    _convert_to_parquet(
         source_dir=source_dir,
         result_dir=result_dir,
-        export_format=export_format,
+        export_format=ExportFormat.parquet,
         use_column_converters=use_column_converters,
     )
 
     _replace_all_pgn_with_pseudo_id_remove_pii_local_id(
-        export_format=export_format, remove_pii=remove_pii, add_local_id=add_local_id
+        export_format=ExportFormat.parquet, remove_pii=remove_pii, add_local_id=add_local_id
     )
+
+    _convert_to_export_format(result_dir=result_dir, export_format=export_format)
 
 
 @app.command()

@@ -210,7 +210,7 @@ def read_asc(fpath: Path, definition_file: Path, use_column_converters: bool = F
     return data
 
 
-def _convert_to_export_format(
+def _convert_to_parquet(
     source_dir: Path,
     result_dir: Path,
     export_format: ExportFormat = ExportFormat.parquet,
