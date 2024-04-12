@@ -65,7 +65,7 @@ def _save_to_file(
     return None
 
 
-def _convert_to_export_format(result_dir: Path, export_format: ExportFormat = ExportFormat.parquet):
+def _convert_to_export_format_remove_parquet(result_dir: Path, export_format: ExportFormat = ExportFormat.parquet):
     """Convert files in directory to exportformat.
 
     Args:
@@ -76,6 +76,9 @@ def _convert_to_export_format(result_dir: Path, export_format: ExportFormat = Ex
         None: None
     """
     eencijfer_files = _get_list_of_eencijfer_files_in_dir(result_dir)
+
+    if eencijfer_files is None:
+        raise Exception('No eencijfer-files found!')
 
     for file in eencijfer_files:
         target_fpath = Path(result_dir / file.name).with_suffix(f".{export_format.value}")
@@ -97,6 +100,9 @@ def _convert_to_export_format(result_dir: Path, export_format: ExportFormat = Ex
                 logger.debug(f"...reading {file.name} succeeded.")
                 logger.debug(f"...saving to {target_fpath}.")
                 _save_to_file(raw_data, dir=result_dir, fname=file.stem, export_format=export_format)
+
+                logger.debug(f"...removing {file}.")
+                Path.unlink(file)
 
             else:
                 logger.info(f"...there does not seem to be data in {file.name}!")
