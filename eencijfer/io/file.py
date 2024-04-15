@@ -65,17 +65,18 @@ def _save_to_file(
     return None
 
 
-def _convert_to_export_format_remove_parquet(result_dir: Path, export_format: ExportFormat = ExportFormat.parquet):
+def _convert_to_export_format(source_dir: Path, result_dir: Path, export_format: ExportFormat = ExportFormat.parquet):
     """Convert files in directory to exportformat.
 
     Args:
-        result_dir (Path): _description_. Defaults to None.
+        source_dir (Path): Path to directory with parquet files. Defaults to None.
+        result_dir (Path): Path to directory with files in export-format. Defaults to None.
         export_format (ExportFormat, optional): _description_. Defaults to ExportFormat.parquet.
 
     Returns:
         None: None
     """
-    eencijfer_files = _get_list_of_eencijfer_files_in_dir(result_dir)
+    eencijfer_files = _get_list_of_eencijfer_files_in_dir(source_dir)
 
     if eencijfer_files is None:
         raise Exception('No eencijfer-files found!')
@@ -100,9 +101,6 @@ def _convert_to_export_format_remove_parquet(result_dir: Path, export_format: Ex
                 logger.debug(f"...reading {file.name} succeeded.")
                 logger.debug(f"...saving to {target_fpath}.")
                 _save_to_file(raw_data, dir=result_dir, fname=file.stem, export_format=export_format)
-
-                logger.debug(f"...removing {file}.")
-                Path.unlink(file)
 
             else:
                 logger.info(f"...there does not seem to be data in {file.name}!")

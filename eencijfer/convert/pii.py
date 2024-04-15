@@ -1,6 +1,5 @@
 """Tools for removing PII."""
 
-import configparser
 import logging
 from pathlib import Path
 
@@ -8,7 +7,6 @@ import numpy as np
 import pandas as pd
 
 from eencijfer.io.file import ExportFormat, _save_to_file
-from eencijfer.settings import config
 from eencijfer.utils.detect_eencijfer_files import _get_eencijfer_datafile, _get_eindexamen_datafile
 from eencijfer.utils.local_data import _add_local_id
 
@@ -124,35 +122,38 @@ def _empty_id_fields(
 
 
 def _replace_all_pgn_with_pseudo_id_remove_pii_local_id(
-    config: configparser.ConfigParser = config,
-    export_format=ExportFormat.parquet,
+    eencijfer_dir: Path,
     remove_pii: bool = True,
     add_local_id: bool = False,
 ) -> None:
     """Replaces id's with pseudo-id's, removes PII, adds local-'s.
 
     Args:
-        config (configparser.ConfigParser, optional): _description_. Defaults to config.
-        export_format (str, optional): Format in which file is saved. Defaults to 'parquet'.
+        eencijfer_dir (Path): Path to directory with eencijfer-parquet-files.
+        remove_pii (bool, optional): Remove person identifiable information. Defaults to True.
+        add_local_id (bool, optional): Add local id. Defaults to False.
+
+    Raises:
+        Exception: _description_
+        Exception: _description_
 
     Returns:
-        None: Saves files to result_dir.
+        None: Overwrite files to eencijfer_dir.
     """
 
     logger.debug('Replacing pgns and removing pii.')
-    result_dir = config.getpath('default', 'result_dir')
 
-    eencijfer_fname = _get_eencijfer_datafile(result_dir)
+    eencijfer_fname = _get_eencijfer_datafile(eencijfer_dir)
     if eencijfer_fname is None:
         raise Exception("No eencijfer-file found.")
-    eencijfer_fpath = Path(result_dir / eencijfer_fname).with_suffix(f'.{export_format.value}')
+    eencijfer_fpath = Path(eencijfer_dir / eencijfer_fname).with_suffix('.parquet')
     eencijfer = pd.read_parquet(eencijfer_fpath)
 
-    vakken_fname = _get_eindexamen_datafile(result_dir)
+    vakken_fname = _get_eindexamen_datafile(eencijfer_dir)
     if vakken_fname is None:
         raise Exception("No eindexamen-file found.")
 
-    vakken_fpath = Path(result_dir / vakken_fname).with_suffix(f'.{export_format.value}')
+    vakken_fpath = Path(eencijfer_dir / vakken_fname).with_suffix(f'.parquet')
     vakken = pd.read_parquet(vakken_fpath)
 
     if add_local_id:
@@ -173,9 +174,9 @@ def _replace_all_pgn_with_pseudo_id_remove_pii_local_id(
         vakken = _replace_pgn_with_pseudo_id(vakken, koppeltabel)
         vakken = _empty_id_fields(vakken)
 
-    logger.info(f"Saving {eencijfer_fname} to {result_dir}")
-    _save_to_file(eencijfer, fname=eencijfer_fname, dir=result_dir, export_format=export_format)
+    logger.info(f"Overwriting {eencijfer_fname} to {eencijfer_dir}")
+    _save_to_file(eencijfer, fname=eencijfer_fname, dir=eencijfer_dir, export_format=ExportFormat.parquet)
 
-    logger.info(f"Saving {vakken_fname} to {result_dir}")
-    _save_to_file(vakken, fname=vakken_fname, dir=result_dir, export_format=export_format)
+    logger.info(f"Saving {vakken_fname} to {eencijfer_dir}")
+    _save_to_file(vakken, fname=vakken_fname, dir=eencijfer_dir, export_format=ExportFormat.parquet)
     return None
