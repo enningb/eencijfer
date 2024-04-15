@@ -153,7 +153,7 @@ def _replace_all_pgn_with_pseudo_id_remove_pii_local_id(
     if vakken_fname is None:
         raise Exception("No eindexamen-file found.")
 
-    vakken_fpath = Path(eencijfer_dir / vakken_fname).with_suffix(f'.parquet')
+    vakken_fpath = Path(eencijfer_dir / vakken_fname).with_suffix('.parquet')
     vakken = pd.read_parquet(vakken_fpath)
 
     if add_local_id:
