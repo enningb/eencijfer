@@ -7,7 +7,7 @@ from typing import Optional
 import pandas as pd
 
 from eencijfer import CONVERTERS
-from eencijfer.io.file import ExportFormat, _save_to_file
+from eencijfer.io.files import ExportFormat, _save_to_file
 from eencijfer.utils.detect_eencijfer_files import _get_list_of_definition_files, _get_list_of_eencijfer_files_in_dir
 
 logger = logging.getLogger(__name__)

@@ -14,7 +14,7 @@ from eencijfer.assets.eencijfer import _create_eencijfer_df
 from eencijfer.assets.eindexamencijfers import _create_eindexamencijfer_df
 from eencijfer.convert.eencijfer import _convert_to_parquet
 from eencijfer.convert.pii import _replace_all_pgn_with_pseudo_id_remove_pii_local_id
-from eencijfer.io.file import ExportFormat, _convert_to_export_format, _save_to_file
+from eencijfer.io.files import ExportFormat, _convert_to_export_format, _save_to_file
 from eencijfer.settings import config
 from eencijfer.utils.init import _create_default_config
 from eencijfer.utils.qa import compare_eencijfer_files_and_definitions

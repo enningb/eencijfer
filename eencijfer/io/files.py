@@ -14,6 +14,19 @@ logger = logging.getLogger(__name__)
 result_dir = config.getpath('default', 'result_dir')
 
 
+class NamingStyle(str, Enum):
+    """Naming schema that is used in files and columns.
+
+    Args:
+        str (_type_): _description_
+        Enum (_type_): _description_
+    """
+
+    Original = "Original"
+    KebabCase = "kebab-case"
+    SnakeCase = "snake_case"
+
+
 class ExportFormat(str, Enum):
     """File format that will be used to convert to.
 
@@ -65,7 +78,12 @@ def _save_to_file(
     return None
 
 
-def _convert_to_export_format(source_dir: Path, result_dir: Path, export_format: ExportFormat = ExportFormat.parquet):
+def _convert_to_export_format(
+    source_dir: Path,
+    result_dir: Path,
+    export_format: ExportFormat = ExportFormat.parquet,
+    naming_style: NamingStyle = NamingStyle.Original,
+):
     """Convert files in directory to exportformat.
 
     Args:
@@ -100,6 +118,7 @@ def _convert_to_export_format(source_dir: Path, result_dir: Path, export_format:
             if len(raw_data) > 0:
                 logger.debug(f"...reading {file.name} succeeded.")
                 logger.debug(f"...saving to {target_fpath}.")
+
                 _save_to_file(raw_data, dir=result_dir, fname=file.stem, export_format=export_format)
 
             else:

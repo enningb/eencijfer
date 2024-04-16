@@ -1,12 +1,13 @@
 """Tools for removing PII."""
 
 import logging
+import sys
 from pathlib import Path
 
 import numpy as np
 import pandas as pd
 
-from eencijfer.io.file import ExportFormat, _save_to_file
+from eencijfer.io.files import ExportFormat, _save_to_file
 from eencijfer.utils.detect_eencijfer_files import _get_eencijfer_datafile, _get_eindexamen_datafile
 from eencijfer.utils.local_data import _add_local_id
 
@@ -145,7 +146,9 @@ def _replace_all_pgn_with_pseudo_id_remove_pii_local_id(
 
     eencijfer_fname = _get_eencijfer_datafile(eencijfer_dir)
     if eencijfer_fname is None:
-        raise Exception("No eencijfer-file found.")
+        logger.warning("No eencijfer-file found. So no PII to remove.")
+        sys.exit(0)
+
     eencijfer_fpath = Path(eencijfer_dir / eencijfer_fname).with_suffix('.parquet')
     eencijfer = pd.read_parquet(eencijfer_fpath)
 

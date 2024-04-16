@@ -5,7 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [ 2024.2.5 ] (2024-04-15)
+## [ 2024.3.1 ] (2024-04-16)
+
+### Fix
+ - Added gracefull exit when no eencijfer-file is found
+ - Fixed broken import
+
+## [ 2024.3.0 ] (2024-04-15)
 
 ### Add
  - Added working-dir for intermediate saves
