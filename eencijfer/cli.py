@@ -70,16 +70,21 @@ def init():
 
 @app.command()
 def convert(
-    export_format: ExportFormat = ExportFormat.parquet,
+    source_dir: Annotated[Optional[Path], typer.Option(help="Directory containing eencijfer source files.")] = None,
+    result_dir: Annotated[Optional[Path], typer.Option(help="Directory where results are stored.")] = None,
+    export_format: Annotated[ExportFormat, typer.Option(help="File format of results.")] = ExportFormat.parquet,
+    # export_format: ExportFormat = ,
     use_column_converters: Annotated[bool, typer.Option("--use-column-converters/--not-use-column-converters", "-c/-C")] = True,
     remove_pii: Annotated[bool, typer.Option("--remove-pii/--do-not-remove-pii", "-p/-P")] = True,
     add_local_id: Annotated[bool, typer.Option("--add-local-id/--do-not-add-local-id", "-s/-S")] = False,
 ):
     """Convert eencijfer-files to desired exportformat, with or without PII."""
 
-    source_dir = config.getpath('default', 'source_dir')
+    if source_dir is None:
+        source_dir = config.getpath('default', 'source_dir')
 
-    result_dir = config.getpath('default', 'result_dir')
+    if result_dir is None:
+        result_dir = config.getpath('default', 'result_dir')
 
     working_dir = result_dir / '.temp_dir'
 

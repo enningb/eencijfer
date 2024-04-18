@@ -48,7 +48,7 @@ def _create_duckdb(source_dir: Path, result_dir: Path, db_name: str) -> None:
         _create_view(duckdb_path=duckdb_path, source_table=eencijfer_fname, view_name='eencijfer')
 
     if eindexamen_fname is not None:
-        _create_view(duckdb_path=duckdb_path, source_table=eencijfer_fname, view_name='eindexamen')
+        _create_view(duckdb_path=duckdb_path, source_table=eindexamen_fname, view_name='eindexamen')
 
     return None
 
@@ -65,19 +65,15 @@ def _import_parquet_to_duckdb(eencijfer_files: list, duckdb_path: Path) -> None:
         for file in eencijfer_files:
             table = (file.stem).replace('-', '_')
             logger.debug(f"...writing {file} to table {table}")
-            con.execute(
-                """
+            query = f"""
                 CREATE TABLE
-                    %(table)s
+                    {table}
                 AS
                     SELECT *
                     FROM
-                    read_parquet('%(file)s')""",
-                {
-                    'table': table,
-                    'file': file,
-                },
-            )
+                    read_parquet('{file}')"""
+
+            con.execute(query)
     return None
 
 
@@ -88,20 +84,9 @@ def _create_view(duckdb_path: Path, source_table: str, view_name: str) -> None:
         None: _description_
     """
 
-    with duckdb.connect(duckdb_path) as con:
+    with duckdb.connect(duckdb_path.as_posix()) as con:
         logger.debug(f'Creating a view named {view_name} for {source_table}...')
         logger.debug(f'... at {duckdb_path}.')
-        con.execute(
-            """
-            CREATE VIEW
-                %(view_name)s
-            AS
-                SELECT *
-                FROM
-                '%(source_table)s';""",
-            {
-                'source_table': source_table,
-                'view_name': view_name,
-            },
-        )
+        query = f"CREATE VIEW {view_name} AS SELECT * from '{source_table}';"
+        con.execute(query)
     return None
