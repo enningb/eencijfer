@@ -12,6 +12,7 @@ default_source_dir = Path().absolute()
 default_assets_dir = Path().absolute() / "assets"
 default_result_dir = Path().absolute() / "result"
 default_import_definitions_dir = PACKAGE_PROVIDED_IMPORT_DEFINTIONS_DIR
+default_db_name = 'eencijfer.duckdb'
 
 
 def _get_config(
@@ -19,6 +20,7 @@ def _get_config(
     source_dir: Path = default_source_dir,
     result_dir: Path = default_result_dir,
     assets_dir: Path = default_assets_dir,
+    db_name: str = default_db_name,
     import_definitions_dir: Path = default_import_definitions_dir,
     use_column_converter: bool = False,
     remove_pii: bool = True,
@@ -36,6 +38,8 @@ def _get_config(
             config.set('default', 'result_dir', result_dir.as_posix())
         if not config.has_option('default', 'assets_dir'):
             config.set('default', 'assets_dir', assets_dir.as_posix())
+        if not config.has_option('default', 'db_name'):
+            config.set('default', 'db_name', db_name)
         if not config.has_option('default', 'import_definitions_dir'):
             config.set('default', 'import_definitions_dir', import_definitions_dir.as_posix())
         if not config.has_option('default', 'use_column_converter'):

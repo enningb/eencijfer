@@ -38,6 +38,7 @@ class ExportFormat(str, Enum):
     csv = "csv"
     parquet = "parquet"
     xlsx = "xlsx"
+    duckdb = "duckdb"
 
 
 def _save_to_file(

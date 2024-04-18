@@ -14,8 +14,10 @@ from eencijfer.assets.eencijfer import _create_eencijfer_df
 from eencijfer.assets.eindexamencijfers import _create_eindexamencijfer_df
 from eencijfer.convert.eencijfer import _convert_to_parquet
 from eencijfer.convert.pii import _replace_all_pgn_with_pseudo_id_remove_pii_local_id
+from eencijfer.io.db import _create_duckdb
 from eencijfer.io.files import ExportFormat, _convert_to_export_format, _save_to_file
 from eencijfer.settings import config
+from eencijfer.utils.detect_eencijfer_files import _get_eencijfer_datafile
 from eencijfer.utils.init import _create_default_config
 from eencijfer.utils.qa import compare_eencijfer_files_and_definitions
 
@@ -81,6 +83,8 @@ def convert(
 
     working_dir = result_dir / '.temp_dir'
 
+    db_name = config.getpath('default', 'db_name')
+
     if not result_dir.is_dir():
         Path(result_dir).mkdir(parents=True, exist_ok=True)
 
@@ -94,11 +98,16 @@ def convert(
         use_column_converters=use_column_converters,
     )
 
-    _replace_all_pgn_with_pseudo_id_remove_pii_local_id(
-        eencijfer_dir=working_dir, remove_pii=remove_pii, add_local_id=add_local_id
-    )
+    eencijfer_fname = _get_eencijfer_datafile(working_dir)
+    if eencijfer_fname:
+        _replace_all_pgn_with_pseudo_id_remove_pii_local_id(
+            eencijfer_dir=working_dir, remove_pii=remove_pii, add_local_id=add_local_id
+        )
 
-    _convert_to_export_format(source_dir=working_dir, result_dir=result_dir, export_format=export_format)
+    if export_format.value == 'duckdb':
+        _create_duckdb(source_dir=working_dir, result_dir=result_dir, db_name=db_name)
+    else:
+        _convert_to_export_format(source_dir=working_dir, result_dir=result_dir, export_format=export_format)
 
     logger.debug(f'Removing working dir {working_dir}')
     shutil.rmtree(working_dir)

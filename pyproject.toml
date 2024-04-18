@@ -28,6 +28,7 @@ pandas =">=2.0.0"
 numpy = ">=1.26.1"
 pyarrow= "^15.0.0"
 case-converter = ">=1.1.0"
+duckdb = "^0.10.1"
 
 [tool.poetry.dev-dependencies]
 black = "^23.12.1"
