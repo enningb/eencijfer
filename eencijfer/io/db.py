@@ -91,7 +91,6 @@ def _create_view(duckdb_path: Path, source_table: str, view_name: str) -> None:
     with duckdb.connect(duckdb_path) as con:
         logger.debug(f'Creating a view named {view_name} for {source_table}...')
         logger.debug(f'... at {duckdb_path}.')
-        # con.execute(f"CREATE VIEW {source_table} AS SELECT * from '{view_name}';")
         con.execute(
             """
             CREATE VIEW
