@@ -1,7 +1,6 @@
 """Tools for removing PII."""
 
 import logging
-import sys
 from pathlib import Path
 
 import numpy as np
@@ -145,41 +144,51 @@ def _replace_all_pgn_with_pseudo_id_remove_pii_local_id(
     logger.debug('Replacing pgns and removing pii.')
 
     eencijfer_fname = _get_eencijfer_datafile(eencijfer_dir)
-    if eencijfer_fname is None:
-        logger.warning("No eencijfer-file found. So no PII to remove.")
-        sys.exit(0)
-
-    eencijfer_fpath = Path(eencijfer_dir / eencijfer_fname).with_suffix('.parquet')
-    eencijfer = pd.read_parquet(eencijfer_fpath)
-
     vakken_fname = _get_eindexamen_datafile(eencijfer_dir)
-    if vakken_fname is None:
-        raise Exception("No eindexamen-file found.")
 
-    vakken_fpath = Path(eencijfer_dir / vakken_fname).with_suffix('.parquet')
-    vakken = pd.read_parquet(vakken_fpath)
+    # at least on of the files should be present.
+    if eencijfer_fname is None and vakken_fname is None:
+        raise Exception("No eencijfer-file or eindexamens found. So no PII to remove or local_id to add.")
 
-    if add_local_id:
-        logger.info('Adding local_id to eencijfer and vakken.')
-        eencijfer = _add_local_id(eencijfer)
-        vakken = _add_local_id(vakken)
+    if eencijfer_fname is not None:
+        eencijfer_fpath = Path(eencijfer_dir / eencijfer_fname).with_suffix('.parquet')
+        eencijfer = pd.read_parquet(eencijfer_fpath)
+
+        if add_local_id:
+            logger.info('Adding local_id to eencijfer and vakken.')
+            eencijfer = _add_local_id(eencijfer)
+
+    if vakken_fname is not None:
+        vakken_fpath = Path(eencijfer_dir / vakken_fname).with_suffix('.parquet')
+        vakken = pd.read_parquet(vakken_fpath)
+
+        if add_local_id:
+            logger.info('Adding local_id to eindexamenvakken.')
+            vakken = _add_local_id(vakken)
 
     if remove_pii:
         if add_local_id:
             logger.warning('Not removing local_id! Data still contains PII.')
+
         logger.info('Creating table with pseudo-ids...')
-        koppeltabel = _create_pgn_pseudo_id_table(eencijfer)
-        logger.info(f'...removing pgn from {eencijfer_fpath}')
-        eencijfer = _replace_pgn_with_pseudo_id(eencijfer, koppeltabel)
-        eencijfer = _empty_id_fields(eencijfer)
+        if eencijfer_fname:
+            koppeltabel = _create_pgn_pseudo_id_table(eencijfer)
+        else:
+            koppeltabel = _create_pgn_pseudo_id_table(vakken)
 
-        logger.info(f'...removing pgn from {vakken_fpath}')
-        vakken = _replace_pgn_with_pseudo_id(vakken, koppeltabel)
-        vakken = _empty_id_fields(vakken)
+        if eencijfer_fname:
+            logger.info(f'...removing pgn from {eencijfer_fpath}')
+            eencijfer = _replace_pgn_with_pseudo_id(eencijfer, koppeltabel)
+            eencijfer = _empty_id_fields(eencijfer)
 
-    logger.info(f"Overwriting {eencijfer_fname} to {eencijfer_dir}")
-    _save_to_file(eencijfer, fname=eencijfer_fname, dir=eencijfer_dir, export_format=ExportFormat.parquet)
+            logger.info(f"Overwriting {eencijfer_fname} to {eencijfer_dir}")
+            _save_to_file(eencijfer, fname=eencijfer_fname, dir=eencijfer_dir, export_format=ExportFormat.parquet)
 
-    logger.info(f"Saving {vakken_fname} to {eencijfer_dir}")
-    _save_to_file(vakken, fname=vakken_fname, dir=eencijfer_dir, export_format=ExportFormat.parquet)
+        if vakken_fname:
+            logger.info(f'...removing pgn from {vakken_fpath}')
+            vakken = _replace_pgn_with_pseudo_id(vakken, koppeltabel)
+            vakken = _empty_id_fields(vakken)
+            logger.info(f"Saving {vakken_fname} to {eencijfer_dir}")
+            _save_to_file(vakken, fname=vakken_fname, dir=eencijfer_dir, export_format=ExportFormat.parquet)
+
     return None
