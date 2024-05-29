@@ -1,7 +1,7 @@
 Label,StartingPosition,NumberOfPositions,Converter
-AdministratienummerOWI,1,4,convert_to_object
+Instellingscode,1,4,convert_to_object
 Opleidingscode,5,5,convert_to_object
-VestigingsnummerOWI,10,2,convert_to_object
+Vestigingsnummer,10,2,convert_to_object
 ActueleInstelling,12,4,convert_to_object
 ActueleVestiging,16,2,convert_to_object
 OpleidingActueelEquivalent,18,5,convert_to_object
