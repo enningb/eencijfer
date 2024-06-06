@@ -74,6 +74,12 @@ def _save_to_file(
     if export_format.value == 'xlsx':
         target_fpath = Path(fpath).with_suffix('.xlsx')
         logger.info(f"Saving {fname} to {target_fpath}...")
+        if len(df) > 10485706:
+            raise Exception(
+                "Saving more than 1.048.576 rows to Excel is not possible.\
+                            Try using another export-format by using:\
+                            eencijfer convert --export-format csv."
+            )
         df.to_excel(target_fpath, index=False)
 
     return None
