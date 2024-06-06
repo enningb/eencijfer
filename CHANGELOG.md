@@ -6,6 +6,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## [ 2024.4.2 ] (2024-06-06)
+
+### Fix
+ - Added openpyxl as a dependency so Excel convert works out of the box.
+
+### Add
+ - Added warning for maximum number of rows when exporting to Excel.
+
+
 ## [ 2024.4.1 ] (2024-05-29)
 
 ### Fix
