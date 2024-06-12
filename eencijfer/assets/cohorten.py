@@ -29,7 +29,9 @@ def create_actief_hoofd_eerstejaar_instelling(source_dir: Path) -> pd.DataFrame:
     # Eerstejaar
     filter_eerstejaar_instelling = eencijfer.Inschrijvingsjaar == eencijfer.EersteJaarAanDezeActueleInstelling
 
-    instroom = eencijfer[(filter_eerstejaar_instelling) & (filter_soortinschrijving_ho) & (filter_actiefopPeildatum)].copy()
+    instroom = eencijfer[
+        (filter_eerstejaar_instelling) & (filter_soortinschrijving_ho) & (filter_actiefopPeildatum)
+    ].copy()
     return instroom
 
 
@@ -325,7 +327,9 @@ def create_cohorten_met_indicatoren(source_dir: Path) -> pd.DataFrame:
         1,
         result.opleiding_gelijk,
     )
-    result["HerinschrijvingInstelling"] = np.where(((result.opleiding_gelijk == 1) & (result.HoDiplomaInEersteJaar == 0)), 1, 0)
+    result["HerinschrijvingInstelling"] = np.where(
+        ((result.opleiding_gelijk == 1) & (result.HoDiplomaInEersteJaar == 0)), 1, 0
+    )
     result["HerinschrijvingInstelling"] = np.where((result.ActueleInstelling == result.ActueleInstelling_2ejaar), 1, 0)
 
     result["SwitchBinnenInstelling"] = np.where(

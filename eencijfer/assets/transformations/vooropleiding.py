@@ -191,7 +191,9 @@ def _add_oorspronkelijke_vooropleiding(data: pd.DataFrame) -> pd.DataFrame:
     return result
 
 
-def _add_naam_instelling_vooropleiding(eencijfer: pd.DataFrame, vooropleiding: str = 'HoogsteVooroplVoorHetHo') -> pd.DataFrame:
+def _add_naam_instelling_vooropleiding(
+    eencijfer: pd.DataFrame, vooropleiding: str = 'HoogsteVooroplVoorHetHo'
+) -> pd.DataFrame:
     """Add name of institution that provided vooropleiding.
 
     Args:

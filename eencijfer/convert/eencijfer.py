@@ -195,9 +195,13 @@ def read_asc(fpath: Path, definition_file: Path, use_column_converters: bool = F
                 logger.critical(f'{examples_non_empty_garbage_columns}')
                 logger.critical(f"{examples_non_empty_garbage_columns.GarbageColumn}")
                 logger.critical('❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌')
-                logger.critical(f'!!!! ❌ ❌ ❌ The garbage-column for {fpath.name} is not empty, check your definitions ❌ ❌ ❌!!!')
+                logger.critical(
+                    f'!!!! ❌ ❌ ❌ The garbage-column for {fpath.name} is not empty, check your definitions ❌ ❌ ❌!!!'
+                )
                 logger.critical('❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌')
-                raise AssertionError(f'!!!! The garbage-column for {fpath.name} is not empty, check your definitions !!!')
+                raise AssertionError(
+                    f'!!!! The garbage-column for {fpath.name} is not empty, check your definitions !!!'
+                )
             else:
                 logger.debug("No garbage detected.")
                 logger.debug(f'The garbage-column for {fpath.name} is empty, removing GarbageColumn from dataframe.')

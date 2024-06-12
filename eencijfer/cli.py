@@ -74,7 +74,9 @@ def convert(
     result_dir: Annotated[Optional[Path], typer.Option(help="Directory where results are stored.")] = None,
     export_format: Annotated[ExportFormat, typer.Option(help="File format of results.")] = ExportFormat.parquet,
     # export_format: ExportFormat = ,
-    use_column_converters: Annotated[bool, typer.Option("--use-column-converters/--not-use-column-converters", "-c/-C")] = True,
+    use_column_converters: Annotated[
+        bool, typer.Option("--use-column-converters/--not-use-column-converters", "-c/-C")
+    ] = True,
     remove_pii: Annotated[bool, typer.Option("--remove-pii/--do-not-remove-pii", "-p/-P")] = True,
     add_local_id: Annotated[bool, typer.Option("--add-local-id/--do-not-add-local-id", "-s/-S")] = False,
 ):

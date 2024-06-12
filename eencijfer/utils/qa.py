@@ -47,7 +47,9 @@ def compare_eencijfer_files_and_definitions(config: configparser.ConfigParser = 
     definition_files = [f.stem for f in definition_fpaths]
     definition_df = pd.DataFrame({'eencijfer_file': definition_files, 'definition': definition_fpaths})
 
-    definition_without_eencijfer = definition_df[~definition_df.definition.isin(eencijfer_df.definition.tolist())].copy()
+    definition_without_eencijfer = definition_df[
+        ~definition_df.definition.isin(eencijfer_df.definition.tolist())
+    ].copy()
 
     result = pd.concat([eencijfer_df, definition_without_eencijfer]).fillna('❌')
 
