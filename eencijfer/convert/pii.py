@@ -58,10 +58,7 @@ def _create_pgn_pseudo_id_table(
 
 
 def _replace_pgn_with_pseudo_id(
-    data: pd.DataFrame,
-    koppeltabel: pd.DataFrame,
-    identifier: str = "PersoonsgebondenNummer",
-    new_identifier_suffix: str = NEW_IDENTIFIER_SUFFIX,
+    data: pd.DataFrame, koppeltabel: pd.DataFrame, identifier: str = "PersoonsgebondenNummer"
 ) -> pd.DataFrame:
     """Replace identief with pseudo-id.
 
@@ -69,29 +66,19 @@ def _replace_pgn_with_pseudo_id(
         data (pd.DataFrame): Table where identifier is to be replaced.
         koppeltabel (pd.DataFrame): table with pseudo-id per id.
         identifier (str, optional): Identifier column. Defaults to "PersoonsgebondenNummer".
-        new_identifier_suffix (str, optional): _description_. Defaults to NEW_IDENTIFIER_SUFFIX.
 
     Returns:
         pd.DataFrame: Table with identifier replaced.
     """
 
-    new_identifier = identifier + new_identifier_suffix
-    logger.debug(f"Name new identifier = {new_identifier}")
-    logger.debug("Merge koppeltabel aan data")
-    result = pd.merge(
-        data,
-        koppeltabel,
-        left_on=identifier,
-        right_on=identifier,
-        how="left",
-    )
-    logger.debug("Remove old identifier.")
-    del result[identifier]
+    pgn_pseudoid_dict = pd.Series(
+        koppeltabel[identifier].values, index=koppeltabel[identifier + NEW_IDENTIFIER_SUFFIX]
+    ).to_dict()
 
-    logger.debug("Rename new identifier to old identifier.")
-    result = result.rename(columns={new_identifier: identifier})
-    logger.info('Replaced PersoonsgebondenNummer with a pseudo-id.')
-    return result
+    logger.debug(f"Replace values in {identifier} with pseudo ids.")
+    data[identifier] = data[identifier].map(pgn_pseudoid_dict)
+
+    return data
 
 
 def _empty_id_fields(
@@ -188,7 +175,7 @@ def _replace_all_pgn_with_pseudo_id_remove_pii_local_id(
             logger.info(f'...removing pgn from {vakken_fpath}')
             vakken = _replace_pgn_with_pseudo_id(vakken, koppeltabel)
             vakken = _empty_id_fields(vakken)
-            logger.info(f"Saving {vakken_fname} to {eencijfer_dir}")
+
             _save_to_file(vakken, fname=vakken_fname, dir=eencijfer_dir, export_format=ExportFormat.parquet)
 
     return None
