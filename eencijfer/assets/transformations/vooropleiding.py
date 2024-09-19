@@ -6,6 +6,8 @@ import pandas as pd
 
 from eencijfer.settings import config
 
+import re
+
 logger = logging.getLogger(__name__)
 
 # In het eencijfer zitten 3 velden die betrekking hebben op de vooropleiding:
@@ -26,23 +28,36 @@ def _determine_vooropleiding(string: str) -> str:
     """
 
     string = string.lower()
-
-    if "mbo" in string:
+    
+    #zoek exacte strings middels regular expressions
+    if re.search(r'\bmbo\b', string):
         return "mbo"
-    elif "vwo" in string:
+    elif re.search(r'\bvwo\b', string):
         return "vwo"
-    elif "havo" in string:
+    elif re.search(r'\bhavo\b', string):
         return "havo"
-    elif "hbo-p" in string:
+    elif re.search(r'\bhbo-p\b', string):
         return "hbo-p"
-    elif "hbo-ba" in string:
+    elif re.search(r'\bhbo-ba\b', string):
         return "hbo-ba"
-    elif "hbo-ad" in string:
+    elif re.search(r'\bhbo-ad\b', string):
         return "hbo-ad"
-    elif "wo-ba" in string:
+    elif re.search(r'\bhbo-vo/ma\b', string):
+        return "hbo-master"
+    elif re.search(r'\bhbo-pim\b', string):
+        return "hbo-master"
+    elif re.search(r'\bwo-p\b', string):
+        return "wo-p"
+    elif re.search(r'\bwo-ba\b', string):
         return "wo-ba"
-    elif "wo-on/ma" or "wo-pim" in string:
+    elif re.search(r'\bwo-on/ma\b', string):
         return "wo-master"
+    elif re.search(r'\bwo-pim\b', string):
+        return "wo-master"
+    elif re.search(r'\bwo-vo/ma/bf\b', string):
+        return "wo-master"
+    elif re.search(r'\bwo-ba\b', string):
+        return "wo-ba"
     else:
         return "overig"
 
@@ -77,30 +92,30 @@ def _add_profiel_havo_vwo(Dec_vopl: pd.DataFrame) -> pd.DataFrame:
         pd.DataFrame: _description_
     """
     profielen = {
-        "200": "ONB",
-        "201": "ALG",
-        "202": "CM",
-        "203": "EM",
-        "204": "EM & CM",
-        "205": "NG",
-        "206": "NG & CM",
-        "207": "NG & EM",
-        "208": "NT",
-        "209": "NT & CM",
-        "210": "NT & EM",
-        "211": "NT & NG",
-        "400": "ONG",
-        "401": "ALG",
-        "402": "CM",
-        "403": "EM",
-        "404": "EM & CM",
-        "405": "NG",
-        "406": "NG & CM",
-        "407": "NG & EM",
-        "408": "NT",
-        "409": "NT & CM",
-        "410": "NT & EM",
-        "411": "NT & NG",
+        "00200": "ONB",
+        "00201": "ALG",
+        "00202": "CM",
+        "00203": "EM",
+        "00204": "EM & CM",
+        "00205": "NG",
+        "00206": "NG & CM",
+        "00207": "NG & EM",
+        "00208": "NT",
+        "00209": "NT & CM",
+        "00210": "NT & EM",
+        "00211": "NT & NG",
+        "00400": "ONG",
+        "00401": "ALG",
+        "00402": "CM",
+        "00403": "EM",
+        "00404": "EM & CM",
+        "00405": "NG",
+        "00406": "NG & CM",
+        "00407": "NG & EM",
+        "00408": "NT",
+        "00409": "NT & CM",
+        "00410": "NT & EM",
+        "00411": "NT & NG",
     }
     profielen_df = (
         pd.DataFrame.from_dict(profielen, orient="index")
@@ -151,7 +166,11 @@ def _add_vooropleiding(
     )
     if not len(result) == len(eencijfer):
         raise Exception("Something went wrong merging.")
-
+    
+    # toekomst: 'VooropleidingKort' bestaat niet, want die heet 'Vooropleiding' (hierin staat de korte omschrijving), 
+    # maar als je 'Vooropleiding' omzet naar vooropleiding_field, wat 'HoogsteVooropleiding' is
+    # krijg je tweemaal een kolom met dezelfde naam, maar andere invulling (codes vs korte beschrijvingen)
+    # lijkt me ongewest.
     result.rename(
         columns={
             "OmschrijvingVooropleiding": vooropleiding_field + "Volledig",
