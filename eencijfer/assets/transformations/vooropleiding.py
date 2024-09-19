@@ -1,12 +1,11 @@
 """Vooropleiding and InstellingVooropleiding."""
 
 import logging
+import re
 
 import pandas as pd
 
 from eencijfer.settings import config
-
-import re
 
 logger = logging.getLogger(__name__)
 
@@ -28,8 +27,8 @@ def _determine_vooropleiding(string: str) -> str:
     """
 
     string = string.lower()
-    
-    #zoek exacte strings middels regular expressions
+
+    # zoek exacte strings middels regular expressions
     if re.search(r'\bmbo\b', string):
         return "mbo"
     elif re.search(r'\bvwo\b', string):
@@ -166,8 +165,8 @@ def _add_vooropleiding(
     )
     if not len(result) == len(eencijfer):
         raise Exception("Something went wrong merging.")
-    
-    # toekomst: 'VooropleidingKort' bestaat niet, want die heet 'Vooropleiding' (hierin staat de korte omschrijving), 
+
+    # toekomst: 'VooropleidingKort' bestaat niet, want die heet 'Vooropleiding' (hierin staat de korte omschrijving),
     # maar als je 'Vooropleiding' omzet naar vooropleiding_field, wat 'HoogsteVooropleiding' is
     # krijg je tweemaal een kolom met dezelfde naam, maar andere invulling (codes vs korte beschrijvingen)
     # lijkt me ongewest.
