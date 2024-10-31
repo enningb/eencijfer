@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <url>
+         <loc>https://enningb.github.io/eencijfer/</loc>
+         <lastmod>2024-10-31</lastmod>
+    </url>
+    <url>
+         <loc>https://enningb.github.io/eencijfer/api/</loc>
+         <lastmod>2024-10-31</lastmod>
+    </url>
+    <url>
+         <loc>https://enningb.github.io/eencijfer/changelog/</loc>
+         <lastmod>2024-10-31</lastmod>
+    </url>
+    <url>
+         <loc>https://enningb.github.io/eencijfer/contributing/</loc>
+         <lastmod>2024-10-31</lastmod>
+    </url>
+    <url>
+         <loc>https://enningb.github.io/eencijfer/installation/</loc>
+         <lastmod>2024-10-31</lastmod>
+    </url>
+    <url>
+         <loc>https://enningb.github.io/eencijfer/usage/</loc>
+         <lastmod>2024-10-31</lastmod>
+    </url>
+</urlset>
