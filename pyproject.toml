@@ -1,7 +1,7 @@
 [tool]
 [tool.poetry]
 name = "eencijfer"
-version = "2024.4.5"
+version = "2024.4.6"
 homepage = "https://github.com/enningb/eencijfer"
 description = "ETL-tool for Dutch eencijfer."
 authors = ["Bram Enning <bramenning@gmail.com>"]
@@ -92,7 +92,7 @@ skip_gitignore = true
 disable_error_code = ["attr-defined"]
 
 [tool.bumpversion]
-current_version = "2024.4.5"
+current_version = "2024.4.6"
 commit = true
 commit_args = "--no-verify"
 tag = true
@@ -109,6 +109,7 @@ filename = "eencijfer/__init__.py"
 
 [[tool.bumpversion.files]]
 filename = "pyproject.toml"
+
 
 
 
