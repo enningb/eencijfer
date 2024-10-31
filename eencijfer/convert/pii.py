@@ -71,7 +71,7 @@ def _replace_pgn_with_pseudo_id(
         pd.DataFrame: Table with identifier replaced.
     """
 
-    pgn_pseudoid_dict = pd.Series(
+    pgn_pseudoid_dict: dict = pd.Series(
         koppeltabel[identifier].values, index=koppeltabel[identifier + NEW_IDENTIFIER_SUFFIX]
     ).to_dict()
 
